@@ -1,0 +1,25 @@
+{
+  "name": "effective-invention",
+  "version": "1.0.0",
+  "description": "Repost content from reddit to instagram",
+  "scripts": {
+    "dev": "node src/app.js",
+    "start": "pm2 start src/app.js ecosystem.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaindlJulian/effective-invention.git"
+  },
+  "contributors": [
+    "Matthias Herzog",
+    "Julian Kaindl"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KaindlJulian/effective-invention/issues"
+  },
+  "homepage": "https://github.com/KaindlJulian/effective-invention#readme",
+  "dependencies": {
+    "pm2": "^4.2.3"
+  }
+}
