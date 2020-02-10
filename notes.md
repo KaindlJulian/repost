@@ -19,10 +19,10 @@ use cluster without library https://nodejs.org/api/cluster.html
 
 inputs
 
-- reddit urls
+- reddit url
 - post schedule
 - instagram credentials
 
-exposed functions
+input via process msg
 
 - change post schedule
