@@ -1,40 +1,57 @@
 import { launch } from 'puppeteer';
 import { PostContent } from '../../types';
-
-const REDDIT_POST_IMAGE_SELECTOR = 'img.ImageBox-image.media-element';
+import { logger } from '../../logger';
 
 export async function getImageAndText(
   redditUrl: string
 ): Promise<PostContent | undefined> {
-  const browser = await launch({ headless: true });
+  if (redditUrl.length === 0) return undefined;
+
+  const browser = await launch({
+    headless: true,
+  });
   const page = await browser.newPage();
 
   page.goto(redditUrl);
 
-  // wait until first image is loaded
-  await page.waitForSelector(REDDIT_POST_IMAGE_SELECTOR);
+  try {
+    // wait until first image is loaded
+    await page.waitForSelector('img.ImageBox-image.media-element', {
+      visible: true,
+      timeout: 3000,
+    });
+    await page.waitFor(1000);
+  } catch (err) {
+    logger.error(
+      `${err}. The subreddit '${redditUrl}' might not exist or doesnt contain any image posts.`
+    );
+    return undefined;
+  }
 
   // click image to open popup
-  page.click(REDDIT_POST_IMAGE_SELECTOR);
+  await page.click('img.ImageBox-image.media-element');
+  await page.waitFor(1000);
 
   const data = await page.evaluate(() => {
     const title = document.querySelectorAll('h1')[1].textContent;
-    let image = null;
-    document.querySelectorAll(REDDIT_POST_IMAGE_SELECTOR).forEach(e => {
-      if (window.getComputedStyle(e).maxHeight === '700px') {
-        image = e.getAttribute('src');
-      }
-    });
+
+    const image = Array.from(
+      document.querySelectorAll('img.ImageBox-image.media-element')
+    )
+      .filter(e => window.getComputedStyle(e).maxHeight === '700px')[0]
+      .getAttribute('src');
 
     if (image && title) {
       return {
-        imageUrl: image,
+        imageUrl: image.replace('preview', 'i'),
         caption: title,
       };
     } else {
       return undefined;
     }
   });
+
+  await browser.close();
 
   return data;
 }

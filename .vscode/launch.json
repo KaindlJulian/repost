@@ -10,7 +10,7 @@
       "name": "Launch Bot",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/build/src/bot/index.js",
-      "args": ["subreddit", "* * * * * *", "instausr", "instapwd"],
+      "args": ["images", "* * * * *", "instausr", "instapwd"],
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/build/**/*.js"]
     },
