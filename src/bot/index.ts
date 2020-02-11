@@ -18,6 +18,7 @@ const bot = new Bot(options);
 
 bot.start();
 
+// stop the bot before the process exits
 process.on('SIGINT', () => {
   bot.stop();
 });

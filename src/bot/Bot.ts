@@ -1,6 +1,8 @@
 import { logger } from '../logger';
 import { BotOptions, InstagramCredentials } from '../types';
 import { CronJob } from 'cron';
+import { getImageAndText } from './tasks/getImageAndText';
+import { createInstagramPost } from './tasks/createInstagramPost';
 
 const REDDIT_URL = 'https://www.reddit.com/r/';
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -30,6 +32,9 @@ export class Bot {
    */
   job: CronJob;
 
+  /**
+   * Creates an instance of Bot.
+   */
   constructor(args: BotOptions) {
     this.instagramCredentials = args.instagramCredentials;
     this.schedule = args.schedule;
@@ -70,12 +75,20 @@ export class Bot {
   }
 
   /**
-   * Executed by the cron job
+   * Executed by the cron job. Executes the tasks required to create a new
+   * instagram post
    */
-  tick() {
-    // open reddit
-    // get some image and text
-    // login to instagram account
-    // create new post
+  private async tick() {
+    const content = await getImageAndText(this.subreddit.url);
+    if (content) {
+      logger.info('creating post with with', content);
+      await createInstagramPost(this.instagramCredentials, content);
+    } else {
+      logger.error('no content found, exiting', {
+        subreddit: this.subreddit.url,
+      });
+      this.stop();
+      process.exit(1);
+    }
   }
 }
