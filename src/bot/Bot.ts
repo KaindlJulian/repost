@@ -1,8 +1,7 @@
-import { logger } from '../logger';
-import { BotOptions, InstagramCredentials } from '../types';
 import { CronJob } from 'cron';
-import { getImageAndText } from './tasks/getImageAndText';
-import { createInstagramPost } from './tasks/createInstagramPost';
+import { logger } from '../logger';
+import { createInstagramPost, getImageAndText } from './tasks';
+import { BotOptions, InstagramCredentials } from '../types';
 
 const REDDIT_URL = 'https://www.reddit.com/r/';
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -17,33 +16,26 @@ export class Bot {
    * Name and url of the subreddit
    */
   readonly subreddit: {
-    name: string;
-    url: string;
+    readonly name: string;
+    readonly url: string;
   };
 
   /**
-   * Changeable schedule string.
-   * More on http://crontab.org/
+   * The cron job instance
    */
-  schedule: string;
-
-  /**
-   * The job instance
-   */
-  job: CronJob;
+  readonly job: CronJob;
 
   /**
    * Creates an instance of Bot.
    */
   constructor(args: BotOptions) {
     this.instagramCredentials = args.instagramCredentials;
-    this.schedule = args.schedule;
     this.subreddit = {
       name: args.subreddit,
       url: `${REDDIT_URL}${args.subreddit}`,
     };
     this.job = new CronJob(
-      this.schedule,
+      args.schedule,
       () => {
         this.tick();
       },

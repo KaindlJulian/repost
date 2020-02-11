@@ -1,9 +1,8 @@
 import { Bot } from './Bot';
 import { BotOptions } from '../types/BotOptions';
 
+// assuming ordered arguments: subreddit, schedule, igusr, igpwd
 const args = process.argv.slice(2);
-
-console.log(args);
 
 const options: BotOptions = {
   subreddit: args[0],

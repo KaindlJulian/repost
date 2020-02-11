@@ -1,25 +1,26 @@
 import { launch } from 'puppeteer';
 import { PostContent } from '../../types';
 
+const REDDIT_POST_IMAGE_SELECTOR = 'img.ImageBox-image.media-element';
+
 export async function getImageAndText(
   redditUrl: string
 ): Promise<PostContent | undefined> {
   const browser = await launch({ headless: true });
   const page = await browser.newPage();
 
-  // open url
   page.goto(redditUrl);
 
   // wait until first image is loaded
-  await page.waitForSelector('img.ImageBox-image.media-element');
+  await page.waitForSelector(REDDIT_POST_IMAGE_SELECTOR);
 
   // click image to open popup
-  page.click('img.ImageBox-image.media-element');
+  page.click(REDDIT_POST_IMAGE_SELECTOR);
 
   const data = await page.evaluate(() => {
     const title = document.querySelectorAll('h1')[1].textContent;
     let image = null;
-    document.querySelectorAll('img.ImageBox-image.media-element').forEach(e => {
+    document.querySelectorAll(REDDIT_POST_IMAGE_SELECTOR).forEach(e => {
       if (window.getComputedStyle(e).maxHeight === '700px') {
         image = e.getAttribute('src');
       }
