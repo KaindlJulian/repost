@@ -4,6 +4,7 @@
   "description": "Repost content from reddit to instagram",
   "scripts": {
     "build": "tsc -p .",
+    "test": "ts-mocha -p tsconfig.json test/**/*.ts --exit",
     "start": "pm2-runtime start build/src/app.js ecosystem.config.js --env production"
   },
   "license": "MIT",
@@ -23,9 +24,12 @@
   },
   "devDependencies": {
     "@types/cron": "^1.7.1",
+    "@types/mocha": "^7.0.1",
     "@types/node": "^13.7.0",
     "@types/puppeteer": "^2.0.0",
     "@types/winston": "^2.4.4",
+    "mocha": "^7.0.1",
+    "ts-mocha": "^6.0.0",
     "typescript": "^3.7.5"
   }
 }
