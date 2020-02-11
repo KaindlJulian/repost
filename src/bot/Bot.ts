@@ -1,6 +1,6 @@
-import { BotOptions } from '../types/BotOptions';
-import { InstagramCredentials } from '../types/InstagramCredentials';
-import * as cron from 'cron';
+import { logger } from '../logger';
+import { BotOptions, InstagramCredentials } from '../types';
+import { CronJob } from 'cron';
 
 const REDDIT_URL = 'https://www.reddit.com/r/';
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -28,7 +28,7 @@ export class Bot {
   /**
    * The job instance
    */
-  job: cron.CronJob;
+  job: CronJob;
 
   constructor(args: BotOptions) {
     this.instagramCredentials = args.instagramCredentials;
@@ -37,13 +37,20 @@ export class Bot {
       name: args.subreddit,
       url: `${REDDIT_URL}${args.subreddit}`,
     };
-    this.job = cron.job(
+    this.job = new CronJob(
       this.schedule,
-      () => this.tick,
+      () => {
+        this.tick();
+      },
       undefined,
       false,
-      TIME_ZONE,
+      TIME_ZONE
     );
+
+    logger.info('New Bot created', {
+      reddit: args.subreddit,
+      schedule: args.schedule,
+    });
   }
 
   /**
@@ -51,12 +58,14 @@ export class Bot {
    */
   start() {
     this.job.start();
+    logger.info('Bot started');
   }
 
   /**
    * End the cron job
    */
   stop() {
+    logger.info('Bot stopped');
     this.job.stop();
   }
 

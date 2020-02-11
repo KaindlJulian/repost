@@ -6,6 +6,7 @@ module.exports = {
       script: './src/app.js',
       instances: 1,
       autorestart: true,
+      merge_logs: true,
       env: {
         NODE_ENV: 'development',
       },

@@ -3,6 +3,8 @@ import { BotOptions } from '../types/BotOptions';
 
 const args = process.argv.slice(2);
 
+console.log(args);
+
 const options: BotOptions = {
   subreddit: args[0],
   schedule: args[1],
