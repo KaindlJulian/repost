@@ -1,9 +1,3 @@
-# process manager
-
-probably stay with pm2 (https://pm2.keymetrics.io/docs/usage/pm2-api/)
-maybe switch to adios: https://github.com/elliotttf/adios
-use cluster without library https://nodejs.org/api/cluster.html
-
 # endpoints
 
 - bot stats by name or all (GET /bot/(:name))
