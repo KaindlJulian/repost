@@ -76,7 +76,7 @@ export class Bot {
       logger.info('creating post with with', content);
       await createInstagramPost(this.instagramCredentials, content);
     } else {
-      logger.error('no content found, exiting', {
+      logger.error('No content found, shutting down the bot.', {
         subreddit: this.subreddit.url,
       });
       this.stop();

@@ -16,8 +16,6 @@ describe('getImageAndText', function() {
 
   it('should resolve to non-null data for existing subreddit', async () => {
     const result = await getImageAndText('https://www.reddit.com/r/images');
-    console.log(result);
-
     assert.notDeepStrictEqual(result, undefined);
   });
 });
