@@ -1,6 +1,7 @@
 import { launch } from 'puppeteer';
-import { PostContent } from '../../types';
-import { logger } from '../../logger';
+import { Cache } from '../cache';
+import { logger } from '@/logger';
+import { PostContent } from '@/types';
 
 export async function getImageAndText(
   redditUrl: string
@@ -15,7 +16,7 @@ export async function getImageAndText(
   page.goto(redditUrl);
 
   try {
-    // wait until first image is loaded
+    // wait until image posts are loaded
     await page.waitForSelector('img.ImageBox-image.media-element', {
       visible: true,
       timeout: 3000,
@@ -28,18 +29,28 @@ export async function getImageAndText(
     return undefined;
   }
 
+  // get all image posts
+  const imagePosts = await page.$$('img.ImageBox-image.media-element');
+
+  // filter out ads and already used posts
+  const filteredPosts = await imagePosts.filter(async p => {
+    return await p.evaluate(e => {
+      return (
+        e.getAttribute('target') !== '_blank' &&
+        (e.getAttribute('src')
+          ? Cache.instance?.has(e.getAttribute('src')!)
+          : false)
+      );
+    });
+  });
+
   // click image to open popup
-  await page.click('img.ImageBox-image.media-element');
+  await filteredPosts[0].click();
   await page.waitFor(1000);
 
-  const data = await page.evaluate(() => {
+  const data = await page.evaluate(async () => {
     const title = document.querySelectorAll('h1')[1].textContent;
-
-    const image = Array.from(
-      document.querySelectorAll('img.ImageBox-image.media-element')
-    )
-      .filter(e => window.getComputedStyle(e).maxHeight === '700px')[0]
-      .getAttribute('src');
+    const image = await filteredPosts[0].evaluate(e => e.getAttribute('src'));
 
     if (image && title) {
       return {

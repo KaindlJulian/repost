@@ -1,10 +1,12 @@
 import { CronJob } from 'cron';
-import { logger } from '../logger';
+import { logger } from '@/logger';
+import { BotOptions, InstagramCredentials } from '@/types';
 import { createInstagramPost, getImageAndText } from './tasks';
-import { BotOptions, InstagramCredentials } from '../types';
+import { Cache } from './cache';
 
 const REDDIT_URL = 'https://www.reddit.com/r/';
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
+const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 
 export class Bot {
   /**
@@ -29,6 +31,7 @@ export class Bot {
    * Creates an instance of Bot.
    */
   constructor(args: BotOptions) {
+    Cache.createInstance(CACHE_TTL);
     this.instagramCredentials = args.instagramCredentials;
     this.subreddit = {
       name: args.subreddit,
