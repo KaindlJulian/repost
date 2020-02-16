@@ -2,7 +2,7 @@ import { CronJob } from 'cron';
 import { logger } from '../logger';
 import { BotOptions, InstagramCredentials } from '../types';
 import { createInstagramPost, getImageAndText } from './tasks';
-import { Cache } from './cache';
+import { Cache } from './Cache';
 
 const REDDIT_URL = 'https://www.reddit.com/r/';
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';

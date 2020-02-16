@@ -1,5 +1,5 @@
 import { launch } from 'puppeteer';
-import { Cache } from '../cache';
+import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { PostContent } from '../../types';
 
