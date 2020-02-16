@@ -15,11 +15,7 @@
     "module": "commonjs",
     "target": "es2017",
     "rootDir": ".",
-    "outDir": "build",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "outDir": "build"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

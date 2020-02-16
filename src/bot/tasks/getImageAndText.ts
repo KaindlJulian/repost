@@ -1,7 +1,7 @@
 import { launch } from 'puppeteer';
 import { Cache } from '../cache';
-import { logger } from '@/logger';
-import { PostContent } from '@/types';
+import { logger } from '../../logger';
+import { PostContent } from '../../types';
 
 export async function getImageAndText(
   redditUrl: string
@@ -33,36 +33,35 @@ export async function getImageAndText(
   const imagePosts = await page.$$('img.ImageBox-image.media-element');
 
   // filter out ads and already used posts
-  const filteredPosts = await imagePosts.filter(async p => {
-    return await p.evaluate(e => {
-      return (
-        e.getAttribute('target') !== '_blank' &&
-        (e.getAttribute('src')
-          ? Cache.instance?.has(e.getAttribute('src')!)
-          : false)
-      );
+  const filteredPosts = imagePosts.filter(async handle => {
+    const data = await handle.evaluate(e => {
+      return {
+        target: e.getAttribute('target')!,
+        src: e.getAttribute('src')!,
+      };
     });
+    return data.target !== '_blank' && Cache.instance.has(data.src);
   });
 
   // click image to open popup
+  await page.waitFor(1000);
   await filteredPosts[0].click();
   await page.waitFor(1000);
 
-  const data = await page.evaluate(async () => {
-    const title = document.querySelectorAll('h1')[1].textContent;
-    const image = await filteredPosts[0].evaluate(e => e.getAttribute('src'));
-
-    if (image && title) {
-      return {
-        imageUrl: image.replace('preview', 'i'),
-        caption: title,
-      };
-    } else {
-      return undefined;
-    }
+  // get post content
+  const image = await filteredPosts[0].evaluate(e => e.getAttribute('src'));
+  const title = await page.evaluate(() => {
+    return document.querySelectorAll('h1')[1].textContent;
   });
 
   await browser.close();
 
-  return data;
+  if (image && title) {
+    return {
+      imageUrl: image.replace('preview', 'i'),
+      caption: title,
+    };
+  } else {
+    return undefined;
+  }
 }

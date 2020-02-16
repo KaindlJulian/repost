@@ -1,6 +1,6 @@
 import NodeCache from 'node-cache';
-import { PostContent } from '@/types';
-import { logger } from '@/logger';
+import { PostContent } from '../types';
+import { logger } from '../logger';
 
 const MAX_CACHE_SIZE = 100;
 const LOGGED_EVENTS = ['set', 'del', 'expired', 'flush'];
@@ -26,7 +26,10 @@ export class Cache {
     this._instance = new Cache(ttl);
   }
 
-  static get instance(): Cache | undefined {
+  static get instance(): Cache {
+    if (!this._instance) {
+      throw 'Create an instance first';
+    }
     return this._instance;
   }
 

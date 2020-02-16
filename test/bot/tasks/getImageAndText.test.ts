@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import { Cache } from '../../../src/bot/cache';
 import { getImageAndText } from '../../../src/bot/tasks';
 
 describe('getImageAndText', function() {
@@ -15,6 +16,7 @@ describe('getImageAndText', function() {
   });
 
   it('should resolve to non-null data for existing subreddit', async () => {
+    Cache.createInstance(60 * 60);
     const result = await getImageAndText('https://www.reddit.com/r/images');
     assert.notDeepStrictEqual(result, undefined);
   });

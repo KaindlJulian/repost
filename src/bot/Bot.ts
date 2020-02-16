@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
-import { logger } from '@/logger';
-import { BotOptions, InstagramCredentials } from '@/types';
+import { logger } from '../logger';
+import { BotOptions, InstagramCredentials } from '../types';
 import { createInstagramPost, getImageAndText } from './tasks';
 import { Cache } from './cache';
 
