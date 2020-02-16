@@ -10,7 +10,15 @@
       "name": "Launch Bot",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/build/src/bot/index.js",
-      "args": ["images", "* * * * *", "instausr", "instapwd"],
+      "args": [
+        "images",
+        "* * * * *",
+        "instausr",
+        "instapwd",
+        "tag1",
+        "tag2",
+        "tag3"
+      ],
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/build/**/*.js"]
     },
