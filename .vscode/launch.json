@@ -20,7 +20,10 @@
         "tag3"
       ],
       "preLaunchTask": "tsc: build - tsconfig.json",
-      "outFiles": ["${workspaceFolder}/build/**/*.js"]
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "env": {
+        "NODE_ENV": "development"
+      }
     },
     {
       "type": "node",
@@ -29,7 +32,10 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/build/src/api/index.js",
       "preLaunchTask": "tsc: build - tsconfig.json",
-      "outFiles": ["${workspaceFolder}/build/**/*.js"]
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "env": {
+        "NODE_ENV": "development"
+      }
     }
   ]
 }
