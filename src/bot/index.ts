@@ -11,6 +11,7 @@ const options: BotOptions = {
     username: args[2],
     password: args[3],
   },
+  tags: args.slice(4),
 };
 
 const bot = new Bot(options);

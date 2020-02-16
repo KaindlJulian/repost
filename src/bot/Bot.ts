@@ -28,15 +28,19 @@ export class Bot {
   readonly job: CronJob;
 
   /**
-   * Creates an instance of Bot.
+   * List of tags to add on each post
    */
+  readonly tags: string[];
+
   constructor(args: BotOptions) {
     Cache.createInstance(CACHE_TTL);
+
     this.instagramCredentials = args.instagramCredentials;
     this.subreddit = {
       name: args.subreddit,
       url: `${REDDIT_URL}${args.subreddit}`,
     };
+    this.tags = args.tags;
     this.job = new CronJob(
       args.schedule,
       () => {
