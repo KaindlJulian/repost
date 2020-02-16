@@ -1,5 +1,5 @@
 import { launch } from 'puppeteer';
-import { InstagramCredentials, PostContent } from '../../types';
+import { InstagramCredentials, PostContent } from '@/types';
 
 const INSTAGRAM_ULR = 'https://www.instagram.com/';
 const INSTAGRAM_LOGIN_PAGE = `${INSTAGRAM_ULR}accounts/login/`;

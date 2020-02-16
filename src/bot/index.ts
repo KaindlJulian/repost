@@ -1,5 +1,5 @@
 import { Bot } from './Bot';
-import { BotOptions } from '../types/BotOptions';
+import { BotOptions } from '@/types';
 
 // assuming ordered arguments: subreddit, schedule, igusr, igpwd
 const args = process.argv.slice(2);
