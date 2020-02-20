@@ -43,6 +43,10 @@ export async function getImageAndText(
     return data.target !== '_blank' && Cache.instance.has(data.src);
   });
 
+  if (!filteredPosts) {
+    return undefined;
+  }
+
   // click image to open popup
   await page.waitFor(1000);
   await filteredPosts[0].click();

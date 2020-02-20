@@ -1,6 +1,7 @@
 import { CronJob } from 'cron';
 import { logger } from '../logger';
-import { BotOptions, InstagramCredentials } from '../types';
+import { CycleArray } from '../utils';
+import { BotOptions, InstagramCredentials, Subreddit } from '../types';
 import { createInstagramPost, getImageAndText } from './tasks';
 import { Cache } from './Cache';
 
@@ -15,12 +16,9 @@ export class Bot {
   private instagramCredentials: InstagramCredentials;
 
   /**
-   * Name and url of the subreddit
+   * Name and url of the subreddits
    */
-  readonly subreddit: {
-    readonly name: string;
-    readonly url: string;
-  };
+  readonly subreddits: CycleArray<Subreddit>;
 
   /**
    * The cron job instance
@@ -36,11 +34,17 @@ export class Bot {
     Cache.createInstance(CACHE_TTL);
 
     this.instagramCredentials = args.instagramCredentials;
-    this.subreddit = {
-      name: args.subreddit,
-      url: `${REDDIT_URL}${args.subreddit}`,
-    };
     this.tags = args.tags;
+
+    const subreddits: Subreddit[] = args.subredditNames.map(n => {
+      return {
+        name: n,
+        url: `${REDDIT_URL}${n}`,
+      };
+    });
+
+    this.subreddits = new CycleArray(...subreddits);
+
     this.job = new CronJob(
       args.schedule,
       () => {
@@ -52,7 +56,7 @@ export class Bot {
     );
 
     logger.info('New Bot created', {
-      reddit: args.subreddit,
+      reddit: args.subredditNames,
       schedule: args.schedule,
     });
   }
@@ -78,13 +82,14 @@ export class Bot {
    * instagram post
    */
   private async tick() {
-    const content = await getImageAndText(this.subreddit.url);
+    const subreddit = this.subreddits.cycle();
+    const content = await getImageAndText(subreddit.url);
     if (content) {
-      logger.info('creating post with with', content);
+      logger.info('Creating post with with', content);
       await createInstagramPost(this.instagramCredentials, content);
     } else {
       logger.error('No content found, shutting down the bot.', {
-        subreddit: this.subreddit.url,
+        subreddit: subreddit.url,
       });
       this.stop();
       process.exit(1);

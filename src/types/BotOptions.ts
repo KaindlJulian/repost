@@ -1,7 +1,7 @@
 import { InstagramCredentials } from './InstagramCredentials';
 
 export interface BotOptions {
-  subreddit: string;
+  subredditNames: string[];
   schedule: string;
   instagramCredentials: InstagramCredentials;
   tags: string[];

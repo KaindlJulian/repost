@@ -2,7 +2,7 @@ import NodeCache from 'node-cache';
 import { PostContent } from '../types';
 import { logger } from '../logger';
 
-const MAX_CACHE_SIZE = 100;
+const MAX_CACHE_KEYS = 100;
 const LOGGED_EVENTS = ['set', 'del', 'expired', 'flush'];
 
 export class Cache {
@@ -13,13 +13,13 @@ export class Cache {
     this._cache = new NodeCache({
       stdTTL: ttl,
       checkperiod: ttl * 0.4,
-      maxKeys: MAX_CACHE_SIZE,
+      maxKeys: MAX_CACHE_KEYS,
       useClones: false,
       forceString: false,
     });
 
     // we log some cache events
-    LOGGED_EVENTS.forEach(e => this._cache.addListener(e, () => onEvent(e)));
+    LOGGED_EVENTS.forEach(e => this._cache.addListener(e, () => logEvent(e)));
   }
 
   static createInstance(ttl: number) {
@@ -72,6 +72,6 @@ export class Cache {
 /**
  * Log when cache fires an event
  */
-function onEvent(event: string) {
+function logEvent(event: string) {
   logger.info(`CACHE: ${event}`);
 }

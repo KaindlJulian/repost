@@ -1,11 +1,10 @@
 import { Bot } from './Bot';
 import { BotOptions } from '../types';
 
-// assuming ordered arguments: subreddit, schedule, igusr, igpwd
 const args = process.argv.slice(2);
 
 const options: BotOptions = {
-  subreddit: args[0],
+  subredditNames: [args[0]], // todo
   schedule: args[1],
   instagramCredentials: {
     username: args[2],
