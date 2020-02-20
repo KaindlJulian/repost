@@ -3,8 +3,8 @@ import auth from 'fastify-auth';
 import cors from 'fastify-cors';
 import { logger } from '../logger';
 import { authenticate } from './authenticate';
-import * as routes from './routes';
 import { registerSwagger } from './swagger';
+import * as routes from './routes';
 
 const PORT = 3000;
 
