@@ -6,7 +6,7 @@ export class CycleArray<T> extends Array<T> {
   /**
    * Holds the index value for the __next__ access.
    */
-  accessIndex: number;
+  private accessIndex: number;
 
   constructor(...params: T[]) {
     super(...params);

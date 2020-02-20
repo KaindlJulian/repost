@@ -1,16 +1,23 @@
 import { Bot } from './Bot';
 import { BotOptions } from '../types';
+import arg from 'arg';
+import { parseCredentials } from '../utils/parseCredentials';
 
-const args = process.argv.slice(2);
+const args = arg(
+  {
+    '--subreddits': [String],
+    '--schedule': String,
+    '--insta': String,
+    '--tags': [String],
+  },
+  { permissive: false }
+);
 
 const options: BotOptions = {
-  subredditNames: [args[0]], // todo
-  schedule: args[1],
-  instagramCredentials: {
-    username: args[2],
-    password: args[3],
-  },
-  tags: args.slice(4),
+  subredditNames: args['--subreddits']!,
+  schedule: args['--schedule']!,
+  instagramCredentials: parseCredentials(args['--insta']!),
+  tags: args['--tags']!,
 };
 
 const bot = new Bot(options);

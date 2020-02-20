@@ -11,10 +11,14 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/build/src/bot/index.js",
       "args": [
+        "--subreddits",
         "images",
+        "earthporn",
+        "--schedule",
         "* * * * *",
-        "instausr",
-        "instapwd",
+        "--insta",
+        "username:password",
+        "--tags",
         "tag1",
         "tag2",
         "tag3"
