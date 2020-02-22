@@ -14,6 +14,8 @@ export const status = (fastify: FastifyInstance, opts: any, done: Function) => {
   done();
 };
 
+// route schemas for validation and docs
+
 const statusesOptions: RouteShorthandOptions = {
   schema: {
     description: 'Get all statuses for running bots',

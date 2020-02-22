@@ -1,7 +1,7 @@
 import { Bot } from './Bot';
 import { BotOptions } from '../types';
 import arg from 'arg';
-import { parseCredentials } from '../utils/parseCredentials';
+import { parseCredentials } from '../utils';
 
 const args = arg(
   {
@@ -23,6 +23,9 @@ const options: BotOptions = {
 const bot = new Bot(options);
 
 bot.start();
+
+// react to pm2 process messages
+process.on('message', data => {});
 
 // stop the bot before the process exits
 process.on('SIGINT', () => {

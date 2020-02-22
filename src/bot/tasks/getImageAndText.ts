@@ -40,7 +40,7 @@ export async function getImageAndText(
         src: e.getAttribute('src')!,
       };
     });
-    return data.target !== '_blank' && Cache.instance.has(data.src);
+    return data.target !== '_blank' && !Cache.instance.has(data.src);
   });
 
   if (!filteredPosts) {
