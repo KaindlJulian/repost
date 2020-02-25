@@ -5,7 +5,6 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "ts-mocha -p tsconfig.json test/**/*.ts --exit",
-    "prestart": "npm run build",
     "start": "NODE_ENV=production node build/src/app.js"
   },
   "license": "MIT",
