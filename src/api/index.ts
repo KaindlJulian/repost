@@ -23,11 +23,11 @@ server.get('/', {}, (request, response) => {
     api: {
       sub: '/api',
       auth: {
-        header: 'Authorization',
+        header: 'authorization',
         value: 'API_KEY',
       },
     },
-    documentation: { sub: '/documentation', auth: {} },
+    documentation: { sub: '/documentation' },
   });
 });
 
