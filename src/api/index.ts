@@ -15,6 +15,11 @@ server.decorate('authenticate', authenticate);
 registerSwagger(server);
 
 server.register(cors);
+
+server.get('', {}, (request, response) => {
+  response.send({ api: '/api', documentation: '/documentation' });
+});
+
 server.register(auth).after(() => {
   server.addHook('preHandler', server.auth([server.authenticate]));
 });

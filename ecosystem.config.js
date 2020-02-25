@@ -2,9 +2,9 @@
 module.exports = {
   apps: [
     {
-      name: 'unnamed',
-      script: './src/app.js',
-      instances: 1,
+      name: 'api',
+      script: './build/src/api/index.js',
+      exec_mode: 'cluster',
       autorestart: true,
       merge_logs: true,
       env: {
@@ -12,6 +12,7 @@ module.exports = {
       },
       env_production: {
         NODE_ENV: 'production',
+        API_KEY: 'k',
       },
     },
   ],

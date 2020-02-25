@@ -15,21 +15,21 @@ export function runAction(name: string, action: Pm2ProcessAction) {
       case Pm2ProcessAction.Restart:
         pm2.restart(name, err => {
           if (err) {
-            logger.error('PM2 Bot Action error', err);
+            logger.error('PM2 Bot Action Restart error', err);
           }
         });
         break;
       case Pm2ProcessAction.Stop:
         pm2.stop(name, err => {
           if (err) {
-            logger.error('PM2 Bot Action error', err);
+            logger.error('PM2 Bot Action Stop error', err);
           }
         });
         break;
       case Pm2ProcessAction.Delete:
         pm2.delete(name, err => {
           if (err) {
-            logger.error('PM2 Bot Action error', err);
+            logger.error('PM2 Bot Action Delete error', err);
           }
         });
         break;
