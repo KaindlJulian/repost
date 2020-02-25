@@ -11,7 +11,7 @@ pm2.connect(err => {
   Object.values(bots).forEach(bot => {
     pm2.start({ ...bot, script: './bot/index.js' }, err => {
       if (err) {
-        logger.error('PM2 App Startup error', err);
+        logger.error('PM2 App Startup error', { pm2: err, bot: bot.name });
       }
     });
   });

@@ -8,7 +8,7 @@ export const authenticate = (
   done: any
 ) => {
   if (process.env.NODE_ENV === 'development') {
-    logger.info('Skipping authentication');
+    logger.info('Skipping authentication', { NODE_ENV: process.env.NODE_ENV });
     done();
   }
   if (!request.headers.Authorization) {

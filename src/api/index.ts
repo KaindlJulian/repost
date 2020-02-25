@@ -16,16 +16,23 @@ registerSwagger(server);
 
 server.register(cors);
 
-server.get('', {}, (request, response) => {
-  response.send({ api: '/api', documentation: '/documentation' });
+server.get('/', {}, (request, response) => {
+  response.send({
+    api: {
+      sub: '/api',
+      auth: {
+        header: 'Authorization',
+        value: 'API_KEY',
+      },
+    },
+    documentation: { sub: '/documentation', auth: {} },
+  });
 });
 
 server.register(auth).after(() => {
-  server.addHook('preHandler', server.auth([server.authenticate]));
-});
-
-Object.values(routes).forEach(r => {
-  server.register(r, { prefix: 'api' });
+  Object.values(routes).forEach(r => {
+    server.register(r, { prefix: 'api' });
+  });
 });
 
 server.ready(err => {

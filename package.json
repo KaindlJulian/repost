@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "ts-mocha -p tsconfig.json test/**/*.ts --exit",
-    "start": "pm2-runtime start build/src/app.js ecosystem.config.js --env production"
+    "prestart": "npm run build",
+    "start": "pm2 start build/src/app.js ecosystem.config.js --env production -f"
   },
   "license": "MIT",
   "repository": {

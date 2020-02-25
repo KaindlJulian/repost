@@ -1,6 +1,8 @@
 import { FastifyInstance, RouteShorthandOptions } from 'fastify';
 
 export const status = (fastify: FastifyInstance, opts: any, done: Function) => {
+  fastify.addHook('preHandler', fastify.auth([fastify.authenticate]));
+
   /**
    * Get all bot status
    */
