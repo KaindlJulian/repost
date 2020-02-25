@@ -3,3 +3,4 @@ export * from './messages/changeSchedule';
 export * from './getBotStatus';
 export * from './runAction';
 export * from './startNewBot';
+export * from './listBotNames';

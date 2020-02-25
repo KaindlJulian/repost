@@ -18,7 +18,7 @@ export function registerSwagger(fastify: FastifyInstance) {
       securityDefinitions: {
         apiKey: {
           type: 'apiKey',
-          name: 'Authorization',
+          name: 'authorization',
           in: 'header',
         },
       },

@@ -6,15 +6,17 @@ import { authenticate } from './authenticate';
 import { registerSwagger } from './swagger';
 import * as routes from './routes';
 
-const PORT = 3000;
+if (process.env.NODE_ENV === 'production' && !process.env.API_KEY) {
+  logger.error('Tried to start production api without API_KEY');
+  process.exit(1);
+}
 
+const PORT = 3000;
 const server = fastify({ logger: false });
 
 server.decorate('authenticate', authenticate);
-
-registerSwagger(server);
-
 server.register(cors);
+registerSwagger(server);
 
 server.get('/', {}, (request, response) => {
   response.send({

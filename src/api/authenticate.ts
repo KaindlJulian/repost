@@ -11,11 +11,11 @@ export const authenticate = (
     logger.info('Skipping authentication', { NODE_ENV: process.env.NODE_ENV });
     done();
   }
-  if (!request.headers.Authorization) {
+  if (!request.headers.authorization) {
     reply.header('WWW-Authenticate', 'API-KEY');
-    done(new Error("'Authorization' header is missing or empty"));
+    done(new Error("'authorization' header is missing or empty"));
   }
-  if (request.headers.Authorization !== process.env.API_KEY) {
+  if (request.headers.authorization !== process.env.API_KEY) {
     logger.warn('Authentication failed with request:', request);
     done(new Error('Incorrect API Key was provided'));
   }

@@ -1,4 +1,13 @@
 import { FastifyInstance, RouteShorthandOptions } from 'fastify';
+import {
+  startNewBot,
+  listBotNames,
+  addSubreddits,
+  changeSchedule,
+  runAction,
+} from '../../pm2';
+import { BotOptions, Pm2ProcessAction } from '../../types';
+import { isValidCron } from 'cron-validator';
 
 export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
   fastify.addHook('preHandler', fastify.auth([fastify.authenticate]));
@@ -6,12 +15,34 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
   /**
    * Return all bot names
    */
-  fastify.get('/bot', getAllOptions, (request, response) => {});
+  fastify.get('/bot', getAllOptions, async (request, response) => {
+    const names = await listBotNames();
+    response.send(names);
+  });
 
   /**
    * Create a new bot
    */
-  fastify.post('/bot', createOptions, (request, response) => {});
+  fastify.post('/bot', createOptions, (request, response) => {
+    if (!isValidCron(request.body.schedule, { seconds: true })) {
+      response.code(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message:
+          'Invalid crontab syntax for schedule. Try it here https://npm.runkit.com/cron-validator',
+      });
+    }
+
+    const options: BotOptions = {
+      subredditNames: request.body.subreddits,
+      schedule: request.body.schedule,
+      instagramCredentials: request.body.credentials,
+      tags: request.body.tags,
+    };
+
+    startNewBot(request.body.name, options);
+    response.send();
+  });
 
   /**
    * Add subbreddits by names to a given bot
@@ -19,22 +50,47 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
   fastify.post(
     '/bot/:name/subreddit',
     subredditOptions,
-    (request, response) => {}
+    (request, response) => {
+      addSubreddits(request.params.name, request.body);
+      response.send();
+    }
   );
 
   /**
    * Change the post schedule on a given bot
    */
-  fastify.post(
-    '/bot/:name/schedule',
-    scheduleOptions,
-    (request, response) => {}
-  );
+  fastify.post('/bot/:name/schedule', scheduleOptions, (request, response) => {
+    if (!isValidCron(request.body.newSchedule, { seconds: true })) {
+      response.code(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message:
+          'Invalid crontab syntax for schedule. Try it here https://npm.runkit.com/cron-validator',
+      });
+    }
+
+    changeSchedule(request.params.name, request.body.newSchedule);
+    response.send();
+  });
 
   /**
    * Execute one of a few predefined pm2 actions on a given bot
    */
-  fastify.post('/bot/:name/pm2', actionOptions, (request, response) => {});
+  fastify.post('/bot/:name/pm2', actionOptions, (request, response) => {
+    const action: string = request.body.action;
+
+    if (action === 'Restart' || action === 'Stop' || action === 'Delete') {
+      runAction(request.params.name, Pm2ProcessAction[action]);
+      response.send();
+    } else {
+      response.code(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message:
+          'Following Actions are allowed: "Restart", "Stop", "Delete". Case sensitive!',
+      });
+    }
+  });
 
   done();
 };
@@ -99,8 +155,8 @@ const createOptions: RouteShorthandOptions = {
         },
         credentials: {
           type: 'string',
-          example: 'lkSxrilnb00gbsnn/eajkZ3v50cFoZgByqPIbSe/whA=',
-          description: '"username:password" AES encoded with the api key',
+          example: 'username:password',
+          description: '"username:password"',
         },
         tags: {
           type: 'array',
@@ -211,9 +267,9 @@ const actionOptions: RouteShorthandOptions = {
       properties: {
         action: {
           type: 'string',
-          example: 'restart',
+          example: 'Restart',
           description:
-            'The pm2 action to run for the bot. Possible values: "stop", "restart", "delete"',
+            'The pm2 action to run for the bot. Possible values: "Stop", "Restart", "Delete".',
         },
       },
     },

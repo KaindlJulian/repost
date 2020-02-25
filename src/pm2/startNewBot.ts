@@ -10,6 +10,7 @@ export function startNewBot(name: string, options: BotOptions) {
   pm2.connect(err => {
     if (err) {
       logger.error('PM2 Connect Error', err);
+      throw err;
     }
 
     pm2.start(generatePm2Config(name, options), err => {

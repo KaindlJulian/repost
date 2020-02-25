@@ -9,6 +9,7 @@ export function runAction(name: string, action: Pm2ProcessAction) {
   pm2.connect(err => {
     if (err) {
       logger.error('PM2 Connect Error', err);
+      throw err;
     }
 
     switch (action) {

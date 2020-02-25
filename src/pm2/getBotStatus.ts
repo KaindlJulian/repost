@@ -10,6 +10,7 @@ export function getBotStatus(name: string): Promise<BotStatus> {
     pm2.connect(err => {
       if (err) {
         logger.error('PM2 Connect Error', err);
+        throw err;
       }
 
       pm2.describe(name, (err, proc) => {
