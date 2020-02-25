@@ -17,6 +17,9 @@
     "Matthias Herzog",
     "Julian Kaindl"
   ],
+  "engines": {
+    "node": "12.13.0"
+  },
   "dependencies": {
     "arg": "^4.1.3",
     "cron": "^1.8.2",
