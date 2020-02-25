@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production' && !process.env.API_KEY) {
   process.exit(1);
 }
 
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const server = fastify({ logger: false });
 
 server.decorate('authenticate', authenticate);
