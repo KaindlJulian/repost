@@ -44,7 +44,7 @@ server.ready(err => {
   server.swagger();
 });
 
-server.listen(PORT, err => {
+server.listen(PORT, '0.0.0.0', err => {
   if (err) {
     throw err;
   }
