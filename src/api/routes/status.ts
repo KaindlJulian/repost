@@ -86,7 +86,8 @@ const statusesOptions: RouteShorthandOptions = {
                   uptime: {
                     type: 'number',
                     example: '604800',
-                    description: 'The uptime of the bot.',
+                    description:
+                      'The uptime of the bot as UNIX epoch timestamp',
                   },
                   instances: {
                     type: 'number',
@@ -128,7 +129,8 @@ const statusesOptions: RouteShorthandOptions = {
                   uptime: {
                     type: 'number',
                     example: '604800',
-                    description: 'The uptime of the bot.',
+                    description:
+                      'The uptime of the bot as UNIX epoch timestamp',
                   },
                   instances: {
                     type: 'number',
@@ -198,7 +200,7 @@ const statusOptions: RouteShorthandOptions = {
               uptime: {
                 type: 'number',
                 example: '604800',
-                description: 'The uptime of the bot.',
+                description: 'The uptime of the bot as UNIX epoch timestamp',
               },
               instances: {
                 type: 'number',
