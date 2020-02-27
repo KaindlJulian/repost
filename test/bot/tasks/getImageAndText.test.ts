@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import { Cache } from '../../../src/bot/Cache';
 import { getImageAndText } from '../../../src/bot/tasks';
 
