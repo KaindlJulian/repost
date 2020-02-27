@@ -7,15 +7,8 @@ export function generatePm2Config(name: string, options: BotOptions) {
   return {
     name: name,
     instances: 1,
-    autorestart: true,
     merge_logs: true,
     args: optionsToArgString(options),
-    env: {
-      NODE_ENV: 'development',
-    },
-    env_production: {
-      NODE_ENV: 'production',
-    },
   };
 }
 

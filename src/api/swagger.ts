@@ -11,7 +11,7 @@ export function registerSwagger(fastify: FastifyInstance) {
         description: 'This is the documentation for the repost api.',
         version: '1.0.0',
       },
-      host: 'localhost',
+      host: 'https://ig-repost-bot.herokuapp.com/api',
       schemes: ['http'],
       consumes: ['application/json'],
       produces: ['application/json'],
