@@ -1,4 +1,4 @@
-import { CronJob } from 'cron';
+import { CronJob, CronTime } from 'cron';
 import { logger } from '../logger';
 import { CycleArray } from '../utils';
 import { BotOptions, InstagramCredentials, Subreddit } from '../types';
@@ -78,12 +78,38 @@ export class Bot {
   }
 
   /**
+   * Set a new bot schedule
+   */
+  changeSchedule(newSchedule: string) {
+    try {
+      this.job.setTime(new CronTime(newSchedule));
+    } catch (error) {
+      logger.error('Could not set new schedule', error);
+    }
+  }
+
+  /**
+   * Add new subreddits
+   */
+  addSubreddits(names: string[]) {
+    const subs = names.map(n => {
+      return {
+        name: n,
+        url: `${REDDIT_URL}${n}`,
+      };
+    });
+
+    this.subreddits.push(...subs);
+  }
+
+  /**
    * Executed by the cron job. Executes the tasks required to create a new
    * instagram post
    */
   private async tick() {
     const subreddit = this.subreddits.cycle();
     const content = await getImageAndText(subreddit.url);
+
     if (content) {
       logger.info('Creating post with with', content);
       await createInstagramPost(this.instagramCredentials, content);

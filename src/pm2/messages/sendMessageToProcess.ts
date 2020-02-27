@@ -1,7 +1,8 @@
 import pm2 from 'pm2';
 import { logger } from '../../logger';
+import { ProcessMessage } from '../../types';
 
-export function sendMessageToProcess(name: string, message: any) {
+export function sendMessageToProcess(name: string, message: ProcessMessage) {
   // connect to pm2
   pm2.connect(err => {
     if (err) {
