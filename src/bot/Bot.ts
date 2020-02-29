@@ -2,7 +2,7 @@ import { CronJob, CronTime } from 'cron';
 import { logger } from '../logger';
 import { CycleArray } from '../utils';
 import { BotOptions, InstagramCredentials, Subreddit } from '../types';
-import { createInstagramPost, getImageAndText } from './tasks';
+import { createInstagramPost, getImageAndText, downloadImage } from './tasks';
 import { Cache } from './Cache';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
@@ -110,15 +110,24 @@ export class Bot {
     const subreddit = this.subreddits.cycle();
     const content = await getImageAndText(subreddit.url);
 
-    if (content) {
-      logger.info('Creating post with with', content);
-      await createInstagramPost(this.instagramCredentials, content);
-    } else {
-      logger.error('No content found, shutting down the bot.', {
+    if (!content) {
+      logger.info('No content found, skipping the schedule.', {
         subreddit: subreddit.url,
       });
-      this.stop();
-      process.exit(1);
+      return;
     }
+
+    const file = await downloadImage(content);
+
+    if (!file) {
+      logger.info('Could not download image, skipping the schedule.', {
+        url: content.imageUrl,
+      });
+      return;
+    } else {
+      content.filePath = file;
+    }
+
+    await createInstagramPost(this.instagramCredentials, content);
   }
 }

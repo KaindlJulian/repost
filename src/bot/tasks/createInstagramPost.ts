@@ -9,8 +9,12 @@ export async function createInstagramPost(
   credentials: InstagramCredentials,
   content: PostContent
 ): Promise<boolean> {
-  const browser = await launch({ headless: true });
+  logger.info('Creating post with', content);
+
+  const browser = await launch({ headless: false });
   const page = await browser.newPage();
+
+  page.setViewport({ width: 360, height: 640, isMobile: true });
 
   const success = await loginInstagramAccount(page, credentials);
 
@@ -19,8 +23,13 @@ export async function createInstagramPost(
   }
 
   await page.goto(`${INSTAGRAM_ULR}${credentials.username}`);
+  await page.waitForSelector('div[data-testid="new-post-button"]');
 
-  // post content
+  const [fileChooser] = await Promise.all([
+    page.waitForFileChooser(),
+    page.click('div[data-testid="new-post-button"]'),
+  ]);
+  await fileChooser.accept([content.filePath!]);
 
   return true;
 }
