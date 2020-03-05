@@ -2,11 +2,12 @@ import assert from 'assert';
 import dotenv from 'dotenv';
 import { createInstagramPost, downloadImage } from '../../../src/bot/tasks';
 import { InstagramCredentials } from '../../../src/types';
+import { TIMEOUT } from './config.test';
 
 dotenv.config();
 
 describe('createInstagramPost', function() {
-  this.timeout(2000000);
+  this.timeout(TIMEOUT);
 
   it('should create a new post', async () => {
     const creds: InstagramCredentials = {

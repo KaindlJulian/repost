@@ -2,11 +2,12 @@ import assert from 'assert';
 import dotenv from 'dotenv';
 import { launch } from 'puppeteer';
 import { loginInstagramAccount } from '../../../src/bot/tasks';
+import { TIMEOUT } from './config.test';
 
 dotenv.config();
 
 describe('loginInstagramAccount', function() {
-  this.timeout(20000);
+  this.timeout(TIMEOUT);
 
   it('should resolve to false with login form invalid credentials', async () => {
     const browser = await launch({ headless: true });

@@ -1,9 +1,10 @@
 import assert from 'assert';
 import { Cache } from '../../../src/bot/Cache';
 import { getImageAndText } from '../../../src/bot/tasks';
+import { TIMEOUT } from './config.test';
 
 describe('getImageAndText', function() {
-  this.timeout(20000);
+  this.timeout(TIMEOUT);
 
   before(() => {
     Cache.createInstance(60 * 60);
