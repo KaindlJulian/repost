@@ -1,11 +1,8 @@
 import { launch } from 'puppeteer';
-import devices from 'puppeteer/DeviceDescriptors';
 import { InstagramCredentials, PostableContent } from '../../types';
 import { logger } from '../../logger';
 import { loginInstagramAccount } from '.';
-
-export const INSTAGRAM_ULR = 'https://www.instagram.com';
-const GALAXY_S5 = devices['Galaxy S5'];
+import { GALAXY_S5, INSTAGRAM_ULR } from './task.config';
 
 /**
  * Tries to create a new instagram post.

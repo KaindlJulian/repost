@@ -41,6 +41,8 @@
         "NODE_ENV": "development"
       }
     },
+    // TEST DEBUGGING
+    // -------------------------------------------------------------------------
     {
       "type": "node",
       "request": "launch",

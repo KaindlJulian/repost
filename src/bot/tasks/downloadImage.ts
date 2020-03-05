@@ -3,8 +3,7 @@ import { promises as fs } from 'fs';
 import { launch } from 'puppeteer';
 import { logger } from '../../logger';
 import { Content, PostableContent } from '../../types';
-
-export const FILE_DIR = '../../../temp/downloads';
+import { FILE_DOWNLOAD_DIR } from './task.config';
 
 /**
  * Tries to download the image from a given url.
@@ -28,7 +27,7 @@ export async function downloadImage(
 
   const file = path.resolve(
     __dirname,
-    FILE_DIR,
+    FILE_DOWNLOAD_DIR,
     content.imageUrl.split('/').pop()!
   );
 

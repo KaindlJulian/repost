@@ -1,9 +1,7 @@
 import { Page } from 'puppeteer';
 import { InstagramCredentials } from '../../types';
-import { INSTAGRAM_ULR } from './createInstagramPost';
 import { logger } from '../../logger';
-
-const INSTAGRAM_LOGIN_PAGE = `${INSTAGRAM_ULR}/accounts/login/`;
+import { INSTAGRAM_LOGIN_PAGE } from './task.config';
 
 /**
  * Tries to login to instagram with given credentials
