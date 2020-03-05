@@ -117,17 +117,14 @@ export class Bot {
       return;
     }
 
-    const file = await downloadImage(content);
+    const postableContent = await downloadImage(content);
 
-    if (!file) {
-      logger.info('Could not download image, skipping the schedule.', {
-        url: content.imageUrl,
-      });
-      return;
-    } else {
-      content.filePath = file;
+    if (postableContent) {
+      await createInstagramPost(
+        this.instagramCredentials,
+        postableContent,
+        this.tags
+      );
     }
-
-    await createInstagramPost(this.instagramCredentials, content);
   }
 }

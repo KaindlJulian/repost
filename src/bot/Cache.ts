@@ -1,5 +1,5 @@
 import NodeCache from 'node-cache';
-import { PostContent } from '../types';
+import { Content } from '../types';
 import { logger } from '../logger';
 
 const MAX_CACHE_KEYS = 100;
@@ -36,15 +36,15 @@ export class Cache {
   /**
    * Set a cached key.
    */
-  set(key: string, value: PostContent) {
-    this._cache.set<PostContent>(key, value);
+  set(key: string, value: Content) {
+    this._cache.set<Content>(key, value);
   }
 
   /**
    * Gets a saved value from the cache.
    */
-  get(key: string): PostContent | undefined {
-    return this._cache.get<PostContent>(key);
+  get(key: string): Content | undefined {
+    return this._cache.get<Content>(key);
   }
 
   /**

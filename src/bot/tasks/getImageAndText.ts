@@ -1,11 +1,15 @@
 import { launch } from 'puppeteer';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
-import { PostContent } from '../../types';
+import { Content } from '../../types';
 
+/**
+ * Resolves the image and caption of the first post on a subreddits _hot_ page
+ * if successful.
+ */
 export async function getImageAndText(
   redditUrl: string
-): Promise<PostContent | undefined> {
+): Promise<Content | undefined> {
   if (redditUrl.length === 0) return undefined;
 
   const browser = await launch({
@@ -62,7 +66,7 @@ export async function getImageAndText(
 
   if (image && title) {
     return {
-      imageUrl: image.replace('preview', 'i'),
+      imageUrl: image.replace('preview', 'i').split('?')[0],
       caption: title,
     };
   } else {

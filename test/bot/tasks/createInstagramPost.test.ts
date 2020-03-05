@@ -1,45 +1,27 @@
-import dotenv from 'dotenv';
 import assert from 'assert';
-import { loginInstagramAccount } from '../../../src/bot/tasks';
-import { launch } from 'puppeteer';
+import dotenv from 'dotenv';
+import { createInstagramPost, downloadImage } from '../../../src/bot/tasks';
+import { InstagramCredentials } from '../../../src/types';
 
 dotenv.config();
 
 describe('createInstagramPost', function() {
-  this.timeout(20000);
+  this.timeout(2000000);
 
-  it('should resolve to false with login form invalid credentials', async () => {
-    const browser = await launch({ headless: true });
-    const page = await browser.newPage();
+  it('should create a new post', async () => {
+    const creds: InstagramCredentials = {
+      username: process.env.IG_TEST_USER!,
+      password: process.env.IG_TEST_PASS!,
+    };
 
-    const success = await loginInstagramAccount(page, {
-      username: '',
-      password: '',
+    const postableContent = await downloadImage({
+      caption: 'Look at my cute cat',
+      imageUrl: 'https://i.redd.it/g2p43e3fqgk41.jpg',
     });
 
-    assert.strictEqual(success, false);
-  });
+    const tags = ['cat', 'cute'];
 
-  it('should resolve to false with authentication invalid credentials', async () => {
-    const browser = await launch({ headless: true });
-    const page = await browser.newPage();
-
-    const success = await loginInstagramAccount(page, {
-      username: 'abc',
-      password: '123456',
-    });
-
-    assert.strictEqual(success, false);
-  });
-
-  it('should login sucessfully with valid credentials', async () => {
-    const browser = await launch({ headless: true });
-    const page = await browser.newPage();
-
-    const success = await loginInstagramAccount(page, {
-      username: process.env.IG_TEST_USER,
-      password: process.env.IG_TEST_PASS,
-    });
+    const success = await createInstagramPost(creds, postableContent!, tags);
 
     assert.strictEqual(success, true);
   });

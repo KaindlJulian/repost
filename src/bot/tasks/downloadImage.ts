@@ -1,14 +1,19 @@
-import fs from 'fs';
 import path from 'path';
+import { promises as fs } from 'fs';
 import { launch } from 'puppeteer';
 import { logger } from '../../logger';
-import { PostContent } from '../../types';
+import { Content, PostableContent } from '../../types';
 
-export const FILE_DIR = './downloads/';
+export const FILE_DIR = '../../../temp/downloads';
 
+/**
+ * Tries to download the image from a given url.
+ * @returns {Promise<PostableContent>} Resolves to a PostableContent object with `filePath` being
+ * an absolute path to the downloaded image.
+ */
 export async function downloadImage(
-  content: PostContent
-): Promise<string | undefined> {
+  content: Content
+): Promise<PostableContent | undefined> {
   logger.info('Downloading image', content);
 
   const browser = await launch({ headless: true });
@@ -21,12 +26,13 @@ export async function downloadImage(
     return undefined;
   }
 
-  const file = path.join(FILE_DIR, content.imageUrl);
+  const file = path.resolve(
+    __dirname,
+    FILE_DIR,
+    content.imageUrl.split('/').pop()!
+  );
 
-  // save image to FILE_DIR with the imageUrl as filename
-  fs.writeFile(file, source.buffer(), err => {
-    logger.error('Could not save file', err);
-  });
+  await fs.writeFile(file, await source.buffer());
 
-  return file;
+  return { ...content, filePath: file };
 }

@@ -1,71 +1,63 @@
-import { launch, Page } from 'puppeteer';
-import { InstagramCredentials, PostContent } from '../../types';
+import { launch } from 'puppeteer';
+import devices from 'puppeteer/DeviceDescriptors';
+import { InstagramCredentials, PostableContent } from '../../types';
 import { logger } from '../../logger';
+import { loginInstagramAccount } from '.';
 
-const INSTAGRAM_ULR = 'https://www.instagram.com/';
-const INSTAGRAM_LOGIN_PAGE = `${INSTAGRAM_ULR}accounts/login/`;
+export const INSTAGRAM_ULR = 'https://www.instagram.com';
+const GALAXY_S5 = devices['Galaxy S5'];
 
+/**
+ * Tries to create a new instagram post.
+ * @returns {Promise<boolean>} resolves to `true` the post was created
+ */
 export async function createInstagramPost(
   credentials: InstagramCredentials,
-  content: PostContent
+  content: PostableContent,
+  tags: string[]
 ): Promise<boolean> {
   logger.info('Creating post with', content);
-
-  const browser = await launch({ headless: false });
+  const browser = await launch({ headless: false, slowMo: 100 });
   const page = await browser.newPage();
 
-  page.setViewport({ width: 360, height: 640, isMobile: true });
+  await page.emulate(GALAXY_S5);
+  await page
+    .browserContext()
+    .overridePermissions(INSTAGRAM_ULR, ['geolocation']);
 
   const success = await loginInstagramAccount(page, credentials);
-
   if (!success) {
     return false;
   }
 
-  await page.goto(`${INSTAGRAM_ULR}${credentials.username}`);
+  await page.goto(`${INSTAGRAM_ULR}/${credentials.username}`);
   await page.waitForSelector('div[data-testid="new-post-button"]');
 
+  // upload the image
   const [fileChooser] = await Promise.all([
     page.waitForFileChooser(),
     page.click('div[data-testid="new-post-button"]'),
   ]);
-  await fileChooser.accept([content.filePath!]);
+  await fileChooser.accept([content.filePath]);
 
-  return true;
-}
+  const nextButton = (await page.$x("//button[contains(text(), 'Next')]"))[0];
+  await nextButton.click();
 
-/**
- * Tries to login to instagram with given credentials
- * @returns {Promise<boolean>} resolves to `true` logged in succesfully
- */
-export async function loginInstagramAccount(
-  page: Page,
-  credentials: InstagramCredentials
-): Promise<boolean> {
-  if (
-    !credentials.username ||
-    !credentials.password ||
-    credentials.password.length < 6
-  ) {
+  // enter the post description with tags
+  const input = `${content.caption}\n\n${tags.map(t => `#${t}`).join(' ')}`;
+  await page.waitForSelector('textarea');
+  await page.type('textarea', input);
+
+  const shareButton = (await page.$x("//button[contains(text(), 'Share')]"))[0];
+
+  if (!shareButton) {
     return false;
   }
 
-  await page.goto(INSTAGRAM_LOGIN_PAGE);
-
-  await page.waitForSelector('[name=username]');
-
-  // type in credentials and click submit
-  await page.type('[name=username]', credentials.username);
-  await page.type('[name=password', credentials.password);
-  await page.click('[type=submit');
-
-  await page.waitFor(3000);
-
-  // check for login error
-  const error = await page.$('#slfErrorAlert');
-  if (error) {
-    logger.warn('Instagram login failed with', credentials);
-    return false;
+  // only actually post when running prod
+  if (process.env.NODE_ENV === 'production') {
+    await shareButton.click();
   }
+
   return true;
 }

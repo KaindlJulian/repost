@@ -40,6 +40,54 @@
       "env": {
         "NODE_ENV": "development"
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Reddit Tests",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "args": [
+        "--file",
+        "${workspaceFolder}/build/test/bot/tasks/getImageAndText.test.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Instagram Login Tests",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "args": [
+        "--file",
+        "${workspaceFolder}/build/test/bot/tasks/loginInstagramAccount.test.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Instagram Post Tests",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "args": [
+        "--file",
+        "${workspaceFolder}/build/test/bot/tasks/createInstagramPost.test.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
     }
   ]
 }
