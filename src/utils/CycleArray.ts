@@ -26,7 +26,7 @@ export class CycleArray<T> extends Array<T> {
   }
 
   /**
-   * Access the next element in queue
+   * Access the next element in rotation
    */
   cycle() {
     const currentIndex = this.accessIndex;
@@ -34,7 +34,7 @@ export class CycleArray<T> extends Array<T> {
     return this[currentIndex];
   }
 
-  // Mutating functions reset the access index (hope those are all):
+  // Overwriting the mutating functions to reset the access index:
 
   push(...items: T[]) {
     this.resetAccessIndex();

@@ -103,7 +103,7 @@ export class Bot {
   }
 
   /**
-   * Executed by the cron job. Executes the tasks required to create a new
+   * Executed by the cron job, runs every schedule. Executes the tasks required to create a new
    * instagram post
    */
   private async tick() {
