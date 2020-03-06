@@ -17,7 +17,7 @@ const options: BotOptions = {
   subredditNames: args['--subreddits']!,
   schedule: args['--schedule']!,
   instagramCredentials: parseCredentials(args['--insta']!),
-  tags: args['--tags']!,
+  tags: args['--tags'] || [],
 };
 
 const bot = new Bot(options);
