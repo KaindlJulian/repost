@@ -6,14 +6,14 @@ import { Content, PostableContent } from '../../types';
 import { FILE_DOWNLOAD_DIR } from './task.config';
 
 /**
- * Tries to download the image from a given url.
+ * Tries to download a file from a given url.
  * @returns {Promise<PostableContent>} Resolves to a PostableContent object with `filePath` being
- * an absolute path to the downloaded image.
+ * an absolute path to the downloaded file.
  */
-export async function downloadImage(
+export async function downloadContent(
   content: Content
 ): Promise<PostableContent | undefined> {
-  logger.info('Downloading image', content);
+  logger.info('Downloading file', content);
 
   const browser = await launch({ headless: true });
   const page = await browser.newPage();
@@ -21,7 +21,7 @@ export async function downloadImage(
   const source = await page.goto(content.imageUrl);
 
   if (!source) {
-    logger.warn('No image found on', content.imageUrl);
+    logger.warn('No file found on', content.imageUrl);
     return undefined;
   }
 

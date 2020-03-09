@@ -2,8 +2,14 @@ import { CronJob, CronTime } from 'cron';
 import { logger } from '../logger';
 import { CycleArray } from '../utils';
 import { BotOptions, InstagramCredentials, Subreddit } from '../types';
-import { createInstagramPost, getImageAndText, downloadImage } from './tasks';
+import {
+  createInstagramPost,
+  getImageAndText,
+  downloadContent,
+  getGifAndText,
+} from './tasks';
 import { Cache } from './Cache';
+import { Randomizer } from './Randomizer';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -24,6 +30,11 @@ export class Bot {
    * The cron job instance
    */
   readonly job: CronJob;
+
+  /**
+   * Bot randomizer
+   */
+  private randomizer: Randomizer;
 
   /**
    * List of tags to add on each post
@@ -53,6 +64,10 @@ export class Bot {
       undefined,
       false,
       TIME_ZONE
+    );
+
+    this.randomizer = Randomizer.getInstance().setSeed(
+      this.instagramCredentials.username
     );
 
     logger.info('New Bot created', {
@@ -108,7 +123,9 @@ export class Bot {
    */
   private async tick() {
     const subreddit = this.subreddits.cycle();
-    const content = await getImageAndText(subreddit.url);
+    const content = this.randomizer.shouldPostGif()
+      ? await getGifAndText(subreddit.url)
+      : await getImageAndText(subreddit.url);
 
     if (!content) {
       logger.info('No content found, skipping the schedule.', {
@@ -117,10 +134,10 @@ export class Bot {
       return;
     }
 
-    const postableContent = await downloadImage(content);
+    const postableContent = await downloadContent(content);
 
     if (postableContent) {
-      await createInstagramPost(
+      const success = await createInstagramPost(
         this.instagramCredentials,
         postableContent,
         this.tags

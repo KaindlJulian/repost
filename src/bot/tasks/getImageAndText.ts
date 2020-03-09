@@ -4,7 +4,7 @@ import { logger } from '../../logger';
 import { Content } from '../../types';
 
 /**
- * Resolves the image and caption of the first post on a subreddits _hot_ page
+ * Resolves to the image and caption of the first post on a subreddits _hot_ page
  * if successful.
  */
 export async function getImageAndText(
