@@ -1,4 +1,6 @@
-# Repost Bot
+<p>
+<img src="/media/logo.svg" width="200px">
+</p>
 
 > Post reddit content to instagram
 
