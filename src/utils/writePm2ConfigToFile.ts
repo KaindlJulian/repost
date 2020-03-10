@@ -4,11 +4,25 @@ import path from 'path';
 /**
  * Writes pm2 config object to a new bot config file in `/bots`
  */
-export function writePm2ConfigToFile(config: any) {
-  const file = path.resolve(
+export async function writePm2ConfigToFile(config: any) {
+  const configFile = path.resolve(
     __dirname,
     '../../bots',
-    `${config.name}.config.ts`
+    `${config.name}.config.js`
   );
-  fs.writeFile(file, config);
+  const barrelFile = path.resolve(__dirname, '../../bots', 'index.js');
+
+  await fs.writeFile(configFile, buildFile(config));
+  await fs.appendFile(
+    barrelFile,
+    `\n__export(require("./${config.name}.config"));`
+  );
+}
+
+function buildFile(config: any) {
+  return [
+    `"use strict;"`,
+    `Object.defineProperty(exports, "__esModule", { value: true });`,
+    `exports.${config.name} = JSON.parse(${JSON.stringify(config)});`,
+  ].join('\n');
 }

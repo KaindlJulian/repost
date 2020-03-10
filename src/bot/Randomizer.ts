@@ -1,4 +1,4 @@
-import { int, use, bernoulli } from 'random';
+import { use, bernoulli } from 'random';
 
 /**
  * Randomizes bot actions, based on probability
@@ -24,6 +24,6 @@ export class Randomizer {
    * Returns a boolean value, indicating if a gif should be posted
    */
   shouldPostGif(): boolean {
-    return Boolean(bernoulli(0.25));
+    return Boolean(bernoulli(0.25)());
   }
 }

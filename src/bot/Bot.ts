@@ -137,7 +137,7 @@ export class Bot {
     const postableContent = await downloadContent(content);
 
     if (postableContent) {
-      const success = await createInstagramPost(
+      await createInstagramPost(
         this.instagramCredentials,
         postableContent,
         this.tags
