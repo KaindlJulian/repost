@@ -2,7 +2,7 @@ import { launch } from 'puppeteer';
 import { InstagramCredentials, PostableContent } from '../../types';
 import { logger } from '../../logger';
 import { loginInstagramAccount } from '.';
-import { GALAXY_S5, INSTAGRAM_ULR } from './task.config';
+import { GALAXY_S5, INSTAGRAM_ULR, LAUNCH_OPTIONS } from './task.config';
 
 /**
  * Tries to create a new instagram post.
@@ -14,7 +14,7 @@ export async function createInstagramPost(
   tags: string[]
 ): Promise<boolean> {
   logger.info('Creating post with', content);
-  const browser = await launch({ headless: false, slowMo: 100 });
+  const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
   await page.emulate(GALAXY_S5);

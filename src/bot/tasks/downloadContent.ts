@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import { launch } from 'puppeteer';
 import { logger } from '../../logger';
 import { Content, PostableContent } from '../../types';
-import { FILE_DOWNLOAD_DIR } from './task.config';
+import { FILE_DOWNLOAD_DIR, LAUNCH_OPTIONS } from './task.config';
 
 /**
  * Tries to download a file from a given url.
@@ -15,7 +15,7 @@ export async function downloadContent(
 ): Promise<PostableContent | undefined> {
   logger.info('Downloading file', content);
 
-  const browser = await launch({ headless: true });
+  const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
   const source = await page.goto(content.imageUrl);

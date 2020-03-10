@@ -2,19 +2,17 @@ import { launch } from 'puppeteer';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { Content } from '../../types';
+import { LAUNCH_OPTIONS } from './task.config';
 
 /**
- * Resolves to the image and caption of the first post on a subreddits _hot_ page
- * if successful.
+ * Tries to get image and text from a subreddit
  */
 export async function getImageAndText(
   redditUrl: string
 ): Promise<Content | undefined> {
   if (redditUrl.length === 0) return undefined;
 
-  const browser = await launch({
-    headless: true,
-  });
+  const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
   page.goto(redditUrl);
