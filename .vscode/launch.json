@@ -46,14 +46,30 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Reddit Tests",
+      "name": "Launch Get Image Tests",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/build/**/*.js"],
       "args": [
         "--file",
-        "${workspaceFolder}/build/test/bot/tasks/getImageAndText.test.js"
+        "${workspaceFolder}/build/test/bot/tasks/getImageContent.test.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Get Video Tests",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "args": [
+        "--file",
+        "${workspaceFolder}/build/test/bot/tasks/getVideoContent.test.js"
       ],
       "env": {
         "NODE_ENV": "development"

@@ -18,6 +18,12 @@ export async function getVideoContent(
   await page.goto(redditUrl);
   await page.waitFor(3000);
 
+  // check if subreddit exists
+  const cakeDay = await page.$('div[id*="CakeDay"]');
+  if (!cakeDay) {
+    return undefined;
+  }
+
   const content = [
     ...(await getRedditGifs(page)),
     ...(await getImgurVideos(page)),
@@ -45,22 +51,20 @@ async function getRedditGifs(page: Page): Promise<Content[]> {
     !Cache.instance.has(data);
   });
 
+  const gifType = ContentType.Gif;
+
   return await Promise.all(
     filtered.map(async handle => {
-      await page.waitFor(1000);
-      await handle.click();
-      await page.waitFor(1000);
-      return await handle.evaluate(async e => {
+      return (await handle.evaluate(async (e, gifType) => {
+        e.parentElement?.click();
         const url = e.getAttribute('src')!;
-        const title = await page.evaluate(
-          () => document.querySelectorAll('h1')[1].textContent
-        );
+        const title = document.querySelectorAll('h1')[1].textContent;
         return {
           url: url.replace('preview', 'i').split('?')[0],
-          type: ContentType.Gif,
+          type: gifType,
           caption: title,
-        } as Content;
-      });
+        };
+      }, gifType)) as Content;
     })
   );
 }

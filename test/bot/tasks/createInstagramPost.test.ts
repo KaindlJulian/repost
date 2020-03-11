@@ -1,7 +1,7 @@
 import assert from 'assert';
 import dotenv from 'dotenv';
-import { createInstagramPost, downloadImage } from '../../../src/bot/tasks';
-import { InstagramCredentials } from '../../../src/types';
+import { createInstagramPost, downloadContent } from '../../../src/bot/tasks';
+import { InstagramCredentials, ContentType } from '../../../src/types';
 import { TIMEOUT } from './config.test';
 
 dotenv.config();
@@ -9,15 +9,16 @@ dotenv.config();
 describe('createInstagramPost', function() {
   this.timeout(TIMEOUT);
 
-  it('should create a new post', async () => {
+  it('should create a new image post', async () => {
     const creds: InstagramCredentials = {
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
     };
 
-    const postableContent = await downloadImage({
+    const postableContent = await downloadContent({
       caption: 'Look at my cute cat',
-      imageUrl: 'https://i.redd.it/g2p43e3fqgk41.jpg',
+      url: 'https://i.redd.it/g2p43e3fqgk41.jpg',
+      type: ContentType.Image,
     });
 
     const tags = ['cat', 'cute'];
