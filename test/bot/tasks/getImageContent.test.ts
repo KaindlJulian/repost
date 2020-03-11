@@ -3,7 +3,7 @@ import { Cache } from '../../../src/bot/Cache';
 import { getImageContent } from '../../../src/bot/tasks';
 import { TIMEOUT } from './config.test';
 
-describe('getImageAndText', function() {
+describe('getImageContent', function() {
   this.timeout(TIMEOUT);
 
   before(() => {

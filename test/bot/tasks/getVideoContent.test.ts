@@ -3,7 +3,7 @@ import { Cache } from '../../../src/bot/Cache';
 import { getVideoContent } from '../../../src/bot/tasks';
 import { TIMEOUT } from './config.test';
 
-describe('getImageAndText', function() {
+describe('getVideoContent', function() {
   this.timeout(TIMEOUT);
 
   before(() => {
