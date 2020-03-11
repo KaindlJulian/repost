@@ -2,14 +2,14 @@ import { CronJob, CronTime } from 'cron';
 import { logger } from '../logger';
 import { CycleArray } from '../utils';
 import { BotOptions, InstagramCredentials, Subreddit } from '../types';
-import {
-  createInstagramPost,
-  getImageAndText,
-  downloadContent,
-  getGifAndText,
-} from './tasks';
 import { Cache } from './Cache';
 import { Randomizer } from './Randomizer';
+import {
+  createInstagramPost,
+  getImageContent,
+  downloadContent,
+  getVideoContent,
+} from './tasks';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -124,8 +124,8 @@ export class Bot {
   private async tick() {
     const subreddit = this.subreddits.cycle();
     const content = this.randomizer.shouldPostGif()
-      ? await getGifAndText(subreddit.url)
-      : await getImageAndText(subreddit.url);
+      ? await getVideoContent(subreddit.url)
+      : await getImageContent(subreddit.url);
 
     if (!content) {
       logger.info('No content found, skipping the schedule.', {

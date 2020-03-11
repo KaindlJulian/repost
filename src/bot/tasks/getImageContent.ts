@@ -1,13 +1,13 @@
 import { launch } from 'puppeteer';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
-import { Content } from '../../types';
+import { Content, ContentType } from '../../types';
 import { LAUNCH_OPTIONS } from './task.config';
 
 /**
  * Tries to get image and text from a subreddit
  */
-export async function getImageAndText(
+export async function getImageContent(
   redditUrl: string
 ): Promise<Content | undefined> {
   if (redditUrl.length === 0) return undefined;
@@ -15,7 +15,7 @@ export async function getImageAndText(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
-  page.goto(redditUrl);
+  await page.goto(redditUrl);
 
   try {
     // wait until image posts are loaded
@@ -42,6 +42,7 @@ export async function getImageAndText(
         src: e.getAttribute('src')!,
       };
     });
+    // _blank are ads
     return data.target !== '_blank' && !Cache.instance.has(data.src);
   });
 
@@ -55,16 +56,17 @@ export async function getImageAndText(
   await page.waitFor(1000);
 
   // get post content
-  const image = await filteredPosts[0].evaluate(e => e.getAttribute('src'));
+  const url = await filteredPosts[0].evaluate(e => e.getAttribute('src'));
   const title = await page.evaluate(() => {
     return document.querySelectorAll('h1')[1].textContent;
   });
 
   await browser.close();
 
-  if (image && title) {
+  if (url && title) {
     return {
-      imageUrl: image.replace('preview', 'i').split('?')[0],
+      type: ContentType.Image,
+      url: url.replace('preview', 'i').split('?')[0],
       caption: title,
     };
   } else {

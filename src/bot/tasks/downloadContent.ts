@@ -18,17 +18,17 @@ export async function downloadContent(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
-  const source = await page.goto(content.imageUrl);
+  const source = await page.goto(content.url);
 
   if (!source) {
-    logger.warn('No file found on', content.imageUrl);
+    logger.warn('No file found on', content.url);
     return undefined;
   }
 
   const file = path.resolve(
     __dirname,
     FILE_DOWNLOAD_DIR,
-    content.imageUrl.split('/').pop()!
+    content.url.split('/').pop()!
   );
 
   await fs.writeFile(file, await source.buffer());

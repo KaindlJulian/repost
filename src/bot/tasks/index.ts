@@ -1,5 +1,5 @@
 export * from './createInstagramPost';
-export * from './getImageAndText';
+export * from './getImageContent';
 export * from './downloadContent';
 export * from './loginInstagramAccount';
-export * from './getGifAndText';
+export * from './getVideoContent';

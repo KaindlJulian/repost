@@ -1,5 +1,12 @@
+export enum ContentType {
+  Image,
+  Gif,
+  Video,
+}
+
 export interface Content {
-  imageUrl: string;
+  type: ContentType;
+  url: string;
   caption: string;
 }
 
