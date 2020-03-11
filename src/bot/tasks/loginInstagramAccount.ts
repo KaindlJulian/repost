@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer';
 import { InstagramCredentials } from '../../types';
 import { logger } from '../../logger';
-import { INSTAGRAM_LOGIN_PAGE } from './task.config';
+import { URLS } from './task.config';
 
 /**
  * Tries to login to instagram with given credentials
@@ -19,7 +19,7 @@ export async function loginInstagramAccount(
     return false;
   }
 
-  await page.goto(INSTAGRAM_LOGIN_PAGE);
+  await page.goto(URLS.INSTAGRAM_LOGIN);
 
   await page.waitForSelector('[name=username]');
 

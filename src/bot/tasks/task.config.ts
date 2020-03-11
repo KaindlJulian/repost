@@ -10,13 +10,10 @@ const LAUNCH_OPTIONS: LaunchOptions = {
 
 const FILE_DOWNLOAD_DIR = '../../../temp/downloads';
 
-const INSTAGRAM_ULR = 'https://www.instagram.com';
-const INSTAGRAM_LOGIN_PAGE = `${INSTAGRAM_ULR}/accounts/login/`;
-
-export {
-  LAUNCH_OPTIONS,
-  INSTAGRAM_ULR,
-  INSTAGRAM_LOGIN_PAGE,
-  GALAXY_S5,
-  FILE_DOWNLOAD_DIR,
+const URLS = {
+  INSTAGRAM: 'https://www.instagram.com',
+  INSTAGRAM_LOGIN: 'https://www.instagram.com/accounts/login/',
+  VIDEO_TO_GIF: 'https://ezgif.com/video-to-gif',
 };
+
+export { LAUNCH_OPTIONS, GALAXY_S5, FILE_DOWNLOAD_DIR, URLS };

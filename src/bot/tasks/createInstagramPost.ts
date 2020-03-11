@@ -2,7 +2,7 @@ import { launch } from 'puppeteer';
 import { InstagramCredentials, PostableContent } from '../../types';
 import { logger } from '../../logger';
 import { loginInstagramAccount } from '.';
-import { GALAXY_S5, INSTAGRAM_ULR, LAUNCH_OPTIONS } from './task.config';
+import { GALAXY_S5, URLS, LAUNCH_OPTIONS } from './task.config';
 
 /**
  * Tries to create a new instagram post.
@@ -20,14 +20,14 @@ export async function createInstagramPost(
   await page.emulate(GALAXY_S5);
   await page
     .browserContext()
-    .overridePermissions(INSTAGRAM_ULR, ['geolocation']);
+    .overridePermissions(URLS.INSTAGRAM, ['geolocation']);
 
   const success = await loginInstagramAccount(page, credentials);
   if (!success) {
     return false;
   }
 
-  await page.goto(`${INSTAGRAM_ULR}/${credentials.username}`);
+  await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`);
   await page.waitForSelector('div[data-testid="new-post-button"]');
 
   // upload the image
