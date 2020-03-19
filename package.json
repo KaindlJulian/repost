@@ -6,7 +6,8 @@
     "build": "tsc -p .",
     "test": "ts-mocha -p tsconfig.json test/**/*.ts --exit",
     "dev": "npm run build; NODE_ENV=development node build/src/app.js",
-    "start": "NODE_ENV=production node build/src/app.js"
+    "start": "NODE_ENV=production node build/src/app.js",
+    "deploy": "git push heroku master"
   },
   "license": "MIT",
   "repository": {
