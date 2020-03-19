@@ -23,6 +23,8 @@ All bots are started and managed by pm2. Bot options are passed by arguments. Yo
 - `--tags`: List of tag names (without #) included on every post
 - `--explore`: The bot will go to the instagram explore page and like content
 
+the explore job runs on a fixed schedule: `0 10 * * 0,2,4`
+
 ### Load Bots on Startup
 
 On startup all the bots exported from `/bots` will be loaded. A bot config follows the [pm2 app declaration](https://pm2.keymetrics.io/docs/usage/application-declaration/#javascript-format) and must at least contain following properties:
