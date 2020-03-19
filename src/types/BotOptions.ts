@@ -5,4 +5,5 @@ export interface BotOptions {
   schedule: string;
   instagramCredentials: InstagramCredentials;
   tags: string[];
+  explore: boolean;
 }

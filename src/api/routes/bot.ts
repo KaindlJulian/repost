@@ -38,6 +38,7 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
       schedule: request.body.schedule,
       instagramCredentials: request.body.credentials,
       tags: request.body.tags,
+      explore: request.body.explore,
     };
 
     startNewBot(request.body.name, options);
@@ -166,6 +167,11 @@ const createOptions: RouteShorthandOptions = {
           minItems: 1,
           example: ['one', 'two', 'three'],
           description: 'Tags that will be included in every instagram post',
+        },
+        explore: {
+          type: 'boolean',
+          example: true,
+          description: 'The bot will randomly like content on the explore page',
         },
       },
     },

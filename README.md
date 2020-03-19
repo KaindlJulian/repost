@@ -21,6 +21,7 @@ All bots are started and managed by pm2. Bot options are passed by arguments. Yo
 **optional**:
 
 - `--tags`: List of tag names (without #) included on every post
+- `--explore`: The bot will go to the instagram explore page and like content
 
 ### Load Bots on Startup
 
@@ -32,7 +33,7 @@ export const images = {
   instances: 1,
   merge_logs: true,
   args:
-    '--subreddits images --schedule "0 0 * * SUN" --insta username:password',
+    '--subreddits images --schedule "0 0 12 * * 1" --insta username:password',
 };
 ```
 

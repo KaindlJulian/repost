@@ -7,5 +7,4 @@
  * https://pm2.keymetrics.io/docs/usage/application-declaration/
  */
 
-export * from './images.config';
 export * from './memes.config';

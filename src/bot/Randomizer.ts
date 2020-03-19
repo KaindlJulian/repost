@@ -1,4 +1,4 @@
-import { use, bernoulli } from 'random';
+import { use, bernoulli, int, float } from 'random';
 
 /**
  * Randomizes bot actions, based on probability
@@ -21,9 +21,27 @@ export class Randomizer {
   }
 
   /**
-   * Returns a boolean value, indicating if a gif should be posted
+   * Returns a boolean value. True if bernoulli trial was sucessful
    */
-  shouldPostGif(): boolean {
-    return Boolean(bernoulli(0.25)());
+  evaluatePercentage(percentage: number): boolean {
+    if (percentage >= 0 && percentage <= 1) {
+      return Boolean(bernoulli(percentage)());
+    } else {
+      throw 'must be 0<=p<=1';
+    }
+  }
+
+  /**
+   * Returns a random number between min and max (0 and 1 by default)
+   */
+  float(min?: number, max?: number) {
+    return float(min, max);
+  }
+
+  /**
+   * Returns a random number between min and max (0 and 1 by default)
+   */
+  number(min?: number, max?: number): number {
+    return int(min, max);
   }
 }

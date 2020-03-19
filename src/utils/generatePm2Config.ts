@@ -17,5 +17,5 @@ function optionsToArgString(options: BotOptions) {
     options.schedule
   }" --insta ${options.instagramCredentials.username}:${
     options.instagramCredentials.password
-  } --tags ${options.tags.join(' ')}`;
+  } --tags ${options.tags.join(' ')} ${options.explore ? '--explore' : ''}`;
 }

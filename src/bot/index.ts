@@ -9,6 +9,7 @@ const args = arg(
     '--schedule': String,
     '--insta': String,
     '--tags': [String],
+    '--explore': Boolean,
   },
   { permissive: false }
 );
@@ -18,6 +19,7 @@ const options: BotOptions = {
   schedule: args['--schedule']!,
   instagramCredentials: parseCredentials(args['--insta']!),
   tags: args['--tags'] || [],
+  explore: args['--explore'] || false,
 };
 
 const bot = new Bot(options);

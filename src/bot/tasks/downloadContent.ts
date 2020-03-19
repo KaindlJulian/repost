@@ -75,7 +75,7 @@ async function convertVideo(page: Page, content: Content): Promise<Content> {
 
   // click convert
   await page.waitForSelector('[name="video-to-gif"]');
-  await page.click('name="video-to-gif"');
+  await page.click('[name="video-to-gif"]');
 
   // get converted gif direct link
   const gifUrl = await (

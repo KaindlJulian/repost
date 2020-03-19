@@ -10,6 +10,7 @@ import {
   downloadContent,
   getVideoContent,
 } from './tasks';
+import { exploreAndLike } from './tasks/exploreAndLike';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -32,6 +33,11 @@ export class Bot {
   readonly job: CronJob;
 
   /**
+   *
+   */
+  private exploreJob?: CronJob;
+
+  /**
    * Bot randomizer
    */
   private randomizer: Randomizer;
@@ -46,6 +52,9 @@ export class Bot {
 
     this.instagramCredentials = args.instagramCredentials;
     this.tags = args.tags;
+    this.randomizer = Randomizer.getInstance().setSeed(
+      this.instagramCredentials.username
+    );
 
     const subreddits: Subreddit[] = args.subredditNames.map(n => {
       return {
@@ -66,9 +75,17 @@ export class Bot {
       TIME_ZONE
     );
 
-    this.randomizer = Randomizer.getInstance().setSeed(
-      this.instagramCredentials.username
-    );
+    if (args.explore) {
+      this.exploreJob = new CronJob(
+        '0 10 * * 0,2,4',
+        () => {
+          exploreAndLike(this.instagramCredentials, this.randomizer);
+        },
+        undefined,
+        false,
+        TIME_ZONE
+      );
+    }
 
     logger.info('New Bot created', {
       reddit: args.subredditNames,
@@ -81,6 +98,7 @@ export class Bot {
    */
   start() {
     this.job.start();
+    this.exploreJob?.start();
     logger.info('Bot started');
   }
 
@@ -90,6 +108,7 @@ export class Bot {
   stop() {
     logger.info('Bot stopped');
     this.job.stop();
+    this.exploreJob?.stop();
   }
 
   /**
@@ -123,7 +142,7 @@ export class Bot {
    */
   private async tick() {
     const subreddit = this.subreddits.cycle();
-    const content = this.randomizer.shouldPostGif()
+    const content = this.randomizer.evaluatePercentage(0.25)
       ? await getVideoContent(subreddit.url)
       : await getImageContent(subreddit.url);
 
