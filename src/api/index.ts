@@ -5,6 +5,7 @@ import { logger } from '../logger';
 import { authenticate } from './authenticate';
 import { registerSwagger } from './swagger';
 import * as routes from './routes';
+import { keepalive } from './keepalive';
 
 if (process.env.NODE_ENV === 'production' && !process.env.API_KEY) {
   logger.error('Tried to start production api without API_KEY');
@@ -48,5 +49,6 @@ server.listen(PORT, '0.0.0.0', err => {
   if (err) {
     throw err;
   }
+  keepalive();
   logger.info(`Server listening on ${PORT}`);
 });
