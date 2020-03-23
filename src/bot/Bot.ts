@@ -1,16 +1,20 @@
 import { CronJob, CronTime } from 'cron';
 import { logger } from '../logger';
-import { CycleArray } from '../utils';
-import { BotOptions, InstagramCredentials, Subreddit } from '../types';
 import { Cache } from './Cache';
 import { Randomizer } from './Randomizer';
+import {
+  BotOptions,
+  InstagramCredentials,
+  Subreddit,
+  CycleArray,
+} from '../types';
 import {
   createInstagramPost,
   getImageContent,
   downloadContent,
   getVideoContent,
+  exploreAndLike,
 } from './tasks';
-import { exploreAndLike } from './tasks/exploreAndLike';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -76,15 +80,10 @@ export class Bot {
     );
 
     if (args.explore) {
-      this.exploreJob = new CronJob(
-        '0 10 * * 0,2,4',
-        () => {
-          exploreAndLike(this.instagramCredentials, this.randomizer);
-        },
-        undefined,
-        false,
-        TIME_ZONE
-      );
+      this.exploreJob = new CronJob('0 12 * * *', () => {
+        exploreAndLike(this.instagramCredentials, this.randomizer);
+        this.randomizeNextExploreSchedule();
+      });
     }
 
     logger.info('New Bot created', {
@@ -112,11 +111,22 @@ export class Bot {
   }
 
   /**
-   * Set a new bot schedule
+   * Set a new bot job schedule
    */
   changeSchedule(newSchedule: string) {
     try {
       this.job.setTime(new CronTime(newSchedule));
+    } catch (error) {
+      logger.error('Could not set new schedule', error);
+    }
+  }
+
+  randomizeNextExploreSchedule() {
+    const minute = this.randomizer.number(0, 59);
+    const hour = this.randomizer.number(6, 24);
+    const newSchedule = `${minute} ${hour} * * *`; // every day at hour:minute
+    try {
+      this.exploreJob?.setTime(new CronTime(newSchedule));
     } catch (error) {
       logger.error('Could not set new schedule', error);
     }

@@ -5,3 +5,4 @@ export * from './InstagramCredentials';
 export * from './Content';
 export * from './Subreddit';
 export * from './Pm2ProcessAction';
+export * from './CycleArray';
