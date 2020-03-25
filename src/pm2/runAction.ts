@@ -6,6 +6,10 @@ import { Pm2ProcessAction } from '../types';
  * Run a `Pm2ProcessAction` on a given bot
  */
 export function runAction(name: string, action: Pm2ProcessAction) {
+  if (name === 'api') {
+    return;
+  }
+
   pm2.connect(err => {
     if (err) {
       logger.error('PM2 Connect Error', err);
