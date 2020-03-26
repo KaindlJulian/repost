@@ -49,6 +49,6 @@ server.listen(PORT, '0.0.0.0', err => {
   if (err) {
     throw err;
   }
-  keepalive();
   logger.info(`Server listening on ${PORT}`);
+  keepalive.start();
 });
