@@ -23,7 +23,7 @@ All bots are started and managed by pm2. Bot options are passed by arguments. Yo
 - `--tags`: List of tag names (without #) included on every post
 - `--explore`: The bot will go to the instagram explore page and like content
 
-the explore job runs on a fixed schedule: `0 10 * * 0,2,4`
+the explore job runs on a random schedule
 
 ### Load Bots on Startup
 
@@ -35,7 +35,7 @@ export const images = {
   instances: 1,
   merge_logs: true,
   args:
-    '--subreddits images --schedule "0 0 12 * * 1" --insta username:password',
+    '--subreddits images --schedule "0 0 12 * * *" --insta username:password',
 };
 ```
 
@@ -55,7 +55,7 @@ Install dependencies
 
 Running the app:
 
-1. Use `npm run dev`. This will compile all files and spin up processes (bots and api) with pm2. The bots are specified in `/bots`
+1. Use `npm run dev`. This will compile all files and start processes (bots and api) with pm2. The bots are specified in `bots/*`
 
 2. Debug with vscode (see [launch.json](.vscode/launch.json))
 
