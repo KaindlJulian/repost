@@ -8,8 +8,10 @@ export const logs = (fastify: FastifyInstance, opts: any, done: Function) => {
    * Get specific bot logs
    */
   fastify.get('/logs/:name', logsOptions, async (request, response) => {
-    const buffer = await getProcessLogs(request.params.name);
-    response.send(buffer);
+    if (request.params.name !== 'api') {
+      const buffer = await getProcessLogs(request.params.name);
+      response.send(buffer);
+    }
   });
 
   done();
