@@ -6,7 +6,7 @@ import * as bots from '../bots';
 
 dotenv.config();
 
-pm2.connect(false, err => {
+pm2.connect(true, err => {
   if (err) {
     logger.error('PM2 Connect Error', err);
     process.exit(1);
