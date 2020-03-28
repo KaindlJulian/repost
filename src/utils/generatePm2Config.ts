@@ -7,6 +7,10 @@ export function generatePm2Config(name: string, options: BotOptions) {
   return {
     name: name,
     instances: 1,
+    error_file: `${process.env.HOME!}/.pm2/logs/${name}.log`,
+    out_file: `${process.env.HOME!}/.pm2/logs/${name}.log`,
+    log_file: `${process.env.HOME!}/.pm2/logs/${name}.log`,
+    max_memory_restart: '150M',
     merge_logs: true,
     args: optionsToArgString(options),
   };
