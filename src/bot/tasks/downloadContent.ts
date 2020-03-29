@@ -50,8 +50,6 @@ async function handleFile(
     return undefined;
   }
 
-  logger.info(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
-
   try {
     await fs.access(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
   } catch (err) {

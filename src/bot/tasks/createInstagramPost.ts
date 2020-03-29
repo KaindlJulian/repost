@@ -14,7 +14,7 @@ export async function createInstagramPost(
   tags: string[]
 ): Promise<boolean> {
   logger.info('Creating post with', content);
-  const browser = await launch(LAUNCH_OPTIONS);
+  const browser = await launch({ ...LAUNCH_OPTIONS, headless: false });
   const page = await browser.newPage();
 
   await page.emulate(GALAXY_S5);
@@ -36,9 +36,10 @@ export async function createInstagramPost(
     page.click('div[data-testid="new-post-button"]'),
   ]);
   await fileChooser.accept([content.filePath]);
+  await page.waitFor(1000);
 
   const nextButton = (await page.$x("//button[contains(text(), 'Next')]"))[0];
-  page.waitFor(1000);
+  await page.waitFor(1000);
   await nextButton.click();
 
   // enter the post description with tags

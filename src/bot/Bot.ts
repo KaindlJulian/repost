@@ -171,9 +171,13 @@ export class Bot {
    */
   private async tick() {
     const subreddit = this.subreddits.cycle();
-    const content = this.randomizer.evaluatePercentage(0.25)
+    let content = this.randomizer.evaluatePercentage(0.25)
       ? await getVideoContent(subreddit.url)
       : await getImageContent(subreddit.url);
+
+    if (!content) {
+      content = await getImageContent(subreddit.url);
+    }
 
     if (!content) {
       logger.info('No content found, skipping the schedule.', {
