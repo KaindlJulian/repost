@@ -5,7 +5,7 @@ import { parseCredentials } from '../utils';
 
 const args = arg(
   {
-    '--subreddits': [String],
+    '--subreddits': String,
     '--schedule': String,
     '--insta': String,
     '--tags': String,
@@ -15,7 +15,7 @@ const args = arg(
 );
 
 const options: BotOptions = {
-  subredditNames: args['--subreddits']!,
+  subredditNames: args['--subreddits']!.split(','),
   schedule: args['--schedule']!,
   instagramCredentials: parseCredentials(args['--insta']!),
   tags: args['--tags']?.split(',') || [],
