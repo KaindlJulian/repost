@@ -1,5 +1,8 @@
+import { Content } from './Content';
+
 export enum MessageType {
   ChangeScheduleMessage,
+  CreatePostMessage,
   AddSubredditMessage,
 }
 
@@ -16,4 +19,9 @@ export interface ChangeScheduleMessage extends ProcessMessage {
 export interface AddSubredditMessage extends ProcessMessage {
   type: MessageType.AddSubredditMessage;
   value: string[];
+}
+
+export interface CreatePostMessage extends ProcessMessage {
+  type: MessageType.CreatePostMessage;
+  value: Content | undefined;
 }

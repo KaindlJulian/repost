@@ -7,6 +7,7 @@ import {
   InstagramCredentials,
   Subreddit,
   CycleArray,
+  Content,
 } from '../types';
 import {
   createInstagramPost,
@@ -144,6 +145,24 @@ export class Bot {
     });
 
     this.subreddits.push(...subs);
+  }
+
+  /**
+   * Create a new post with content or search for content
+   */
+  async createPost(content?: Content) {
+    if (!content) {
+      this.tick();
+    } else {
+      const postableContent = await downloadContent(content);
+      if (postableContent) {
+        await createInstagramPost(
+          this.instagramCredentials,
+          postableContent,
+          this.tags
+        );
+      }
+    }
   }
 
   /**

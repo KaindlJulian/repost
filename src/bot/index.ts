@@ -36,6 +36,9 @@ process.on('message', data => {
     case MessageType.ChangeScheduleMessage:
       bot.changeSchedule(message.value);
       break;
+    case MessageType.CreatePostMessage:
+      bot.createPost(message.value);
+      break;
   }
 });
 

@@ -8,6 +8,7 @@ import {
 } from '../../pm2';
 import { BotOptions, Pm2ProcessAction } from '../../types';
 import { isValidCron } from 'cron-validator';
+import { createPost } from '../../pm2/messages/createPost';
 
 export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
   fastify.addHook('preHandler', fastify.auth([fastify.authenticate]));
@@ -42,6 +43,14 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
     };
 
     startNewBot(request.body.name, options);
+    response.send();
+  });
+
+  /**
+   * Manually issue a post
+   */
+  fastify.post('/bot/:name/post', postOptions, (request, response) => {
+    createPost(request.params.name, request.body.caption, request.body.content);
     response.send();
   });
 
@@ -172,6 +181,46 @@ const createOptions: RouteShorthandOptions = {
           type: 'boolean',
           example: true,
           description: 'The bot will randomly like content on the explore page',
+        },
+      },
+    },
+  },
+};
+
+const postOptions: RouteShorthandOptions = {
+  schema: {
+    tags: ['bot'],
+    description:
+      'Manually make a new post. Either provide the caption and content link (img/gif/mp4) or leave one empty and the bot handles the request like a scheduled post',
+    summary: 'Manually make the bot create a post',
+    security: [
+      {
+        apiKey: [],
+      },
+    ],
+    params: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Name of a running bot',
+          example: 'myBot',
+          required: true,
+        },
+      },
+    },
+    body: {
+      type: 'object',
+      properties: {
+        caption: {
+          type: 'string',
+          description: 'The caption of the new post',
+          example: 'Look at my cute cat',
+        },
+        content: {
+          type: 'string',
+          description: 'Direct link to image/gif or video content',
+          example: 'https://i.imgur.com/QNnL1yk.mp4',
         },
       },
     },
