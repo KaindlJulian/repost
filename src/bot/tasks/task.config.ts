@@ -9,7 +9,7 @@ const LAUNCH_OPTIONS: LaunchOptions = {
   slowMo: process.env.NODE_ENV === 'production' ? undefined : 100,
 };
 
-const FILE_DOWNLOAD_DIR = '../../../temp/downloads';
+const FILE_DOWNLOAD_DIR = '../../../downloads';
 
 const URLS = {
   INSTAGRAM: 'https://www.instagram.com',

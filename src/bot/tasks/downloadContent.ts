@@ -50,6 +50,15 @@ async function handleFile(
     return undefined;
   }
 
+  logger.info(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
+
+  try {
+    await fs.access(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
+  } catch (err) {
+    logger.error('Couldnt access download directory', err);
+    await fs.mkdir(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
+  }
+
   const file = path.resolve(
     __dirname,
     FILE_DOWNLOAD_DIR,
