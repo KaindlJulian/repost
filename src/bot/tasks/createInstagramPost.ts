@@ -14,7 +14,7 @@ export async function createInstagramPost(
   tags: string[]
 ): Promise<boolean> {
   logger.info('Creating post with', content);
-  const browser = await launch({ ...LAUNCH_OPTIONS, headless: false });
+  const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
   await page.emulate(GALAXY_S5);
