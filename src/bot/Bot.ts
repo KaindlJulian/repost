@@ -37,7 +37,7 @@ export class Bot {
   readonly job: CronJob;
 
   /**
-   *
+   * The cron explore job instance
    */
   private exploreJob?: CronJob;
 

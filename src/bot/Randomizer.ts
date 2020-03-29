@@ -32,7 +32,7 @@ export class Randomizer {
   }
 
   /**
-   * Returns a random number between min and max (0 and 1 by default)
+   * Returns a random floatign point number between min and max (0 and 1 by default)
    */
   float(min?: number, max?: number) {
     return float(min, max);

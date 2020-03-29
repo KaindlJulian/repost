@@ -50,7 +50,7 @@ server.listen(PORT, '0.0.0.0', err => {
     throw err;
   }
   logger.info(`Server listening on ${PORT}`);
-  if (process.env.NODE_ENV === 'prdouction') {
+  if (process.env.NODE_ENV === 'production') {
     keepalive.start();
   }
 });
