@@ -15,6 +15,8 @@ export async function getImageContent(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
+  await page.browserContext().overridePermissions(redditUrl, []);
+
   await page.goto(redditUrl);
 
   try {
