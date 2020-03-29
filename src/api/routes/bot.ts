@@ -205,7 +205,6 @@ const postOptions: RouteShorthandOptions = {
           type: 'string',
           description: 'Name of a running bot',
           example: 'myBot',
-          required: true,
         },
       },
     },
