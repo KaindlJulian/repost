@@ -13,7 +13,8 @@ pm2.connect(true, err => {
   }
 
   // start all the bots
-  Object.values(bots).forEach(bot => {
+  Object.values(bots).forEach(botGetter => {
+    const bot = botGetter();
     pm2.start(
       { ...bot, script: path.join(__dirname, '/bot/index.js') },
       err => {
@@ -37,6 +38,7 @@ pm2.connect(true, err => {
       merge_logs: true,
       env: {
         API_KEY: process.env.API_KEY || '',
+        NODE_ENV: process.env.NODE_ENV!,
       },
     },
     err => {

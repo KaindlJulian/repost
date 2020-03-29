@@ -8,7 +8,7 @@ const args = arg(
     '--subreddits': [String],
     '--schedule': String,
     '--insta': String,
-    '--tags': [String],
+    '--tags': String,
     '--explore': Boolean,
   },
   { permissive: false }
@@ -18,7 +18,7 @@ const options: BotOptions = {
   subredditNames: args['--subreddits']!,
   schedule: args['--schedule']!,
   instagramCredentials: parseCredentials(args['--insta']!),
-  tags: args['--tags'] || [],
+  tags: args['--tags']?.split(',') || [],
   explore: args['--explore'] || false,
 };
 

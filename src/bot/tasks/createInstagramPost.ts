@@ -38,6 +38,7 @@ export async function createInstagramPost(
   await fileChooser.accept([content.filePath]);
 
   const nextButton = (await page.$x("//button[contains(text(), 'Next')]"))[0];
+  page.waitFor(1000);
   await nextButton.click();
 
   // enter the post description with tags

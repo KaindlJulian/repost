@@ -88,8 +88,7 @@ export class Bot {
     }
 
     logger.info('New Bot created', {
-      reddit: args.subredditNames,
-      schedule: args.schedule,
+      options: args,
     });
   }
 
@@ -151,6 +150,7 @@ export class Bot {
    * Create a new post with content or search for content
    */
   async createPost(content?: Content) {
+    logger.info('Creating new post from endpoint', content);
     if (!content) {
       this.tick();
     } else {

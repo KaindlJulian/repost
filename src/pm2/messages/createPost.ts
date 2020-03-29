@@ -1,15 +1,18 @@
 import { sendMessageToProcess } from './sendMessageToProcess';
 import { MessageType, CreatePostMessage, ContentType } from '../../types';
+import { logger } from '../../logger';
 
 /**
  * Add subreddits to a given bot
  */
 export function createPost(name: string, caption?: string, url?: string) {
+  logger.info(url || 'undefind');
+
   const urlFileExt = caption
     ?.split('.')
     [caption?.split('.').length - 1].toLowerCase();
 
-  let type: ContentType;
+  let type;
   switch (urlFileExt) {
     case 'png' || 'jpg' || 'jpeg':
       type = ContentType.Image;
@@ -21,12 +24,12 @@ export function createPost(name: string, caption?: string, url?: string) {
       type = ContentType.Gif;
       break;
     default:
-      return;
+      type = null;
   }
 
   const message: CreatePostMessage = {
     type: MessageType.CreatePostMessage,
-    value: caption && url ? { caption, url, type } : undefined,
+    value: caption && url && type ? { caption, url, type } : undefined,
   };
   sendMessageToProcess(name, message);
 }

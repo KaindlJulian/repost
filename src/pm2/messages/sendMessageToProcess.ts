@@ -8,6 +8,7 @@ export function sendMessageToProcess(name: string, message: ProcessMessage) {
     if (err) {
       logger.error('PM2 Connect Error', err);
     }
+    logger.info('tt');
 
     // get a list of running apps
     pm2.list((err, list) => {
