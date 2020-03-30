@@ -3,6 +3,6 @@ import path from 'path';
 
 export async function getProcessLogs(name: string) {
   return await fs.readFile(
-    path.join(process.env.HOME!, '.pm2', 'logs', `${name}.log`)
+    path.join(process.env.HOME!, '.pm2', 'logs', `${name}.png`)
   );
 }

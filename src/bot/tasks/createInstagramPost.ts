@@ -27,6 +27,11 @@ export async function createInstagramPost(
     return false;
   }
 
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME!}/.pm2/logs/memes.png`,
+  });
+
   await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`);
   await page.waitForSelector('div[data-testid="new-post-button"]');
 
