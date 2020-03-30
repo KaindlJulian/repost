@@ -20,15 +20,23 @@ export async function downloadContent(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
+  let downloadedContent = undefined;
+
   switch (content.type) {
     case ContentType.Image:
-      return handleFile(page, content);
+      downloadedContent = await handleFile(page, content);
+      break;
     case ContentType.Gif:
-      return handleFile(page, content);
+      downloadedContent = await handleFile(page, content);
+      break;
     case ContentType.Video:
       const convertedContent = await convertVideo(page, content);
-      return handleFile(page, convertedContent);
+      downloadedContent = await handleFile(page, convertedContent);
+      break;
   }
+
+  await browser.close();
+  return downloadedContent;
 }
 
 /**

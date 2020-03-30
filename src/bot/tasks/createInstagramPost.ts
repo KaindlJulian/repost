@@ -1,4 +1,4 @@
-import { launch } from 'puppeteer';
+import { launch, Page } from 'puppeteer';
 import { InstagramCredentials, PostableContent } from '../../types';
 import { logger } from '../../logger';
 import { loginInstagramAccount } from '.';
@@ -15,19 +15,20 @@ export async function createInstagramPost(
 ): Promise<boolean> {
   logger.info('Creating post with', content);
   const browser = await launch(LAUNCH_OPTIONS);
-  let page = await browser.newPage();
+  let page: Page | undefined = await browser.newPage();
 
   await page.emulate(GALAXY_S5);
   await page
     .browserContext()
     .overridePermissions(URLS.INSTAGRAM, ['geolocation']);
 
-  const success = await loginInstagramAccount(page, credentials);
-  if (!success) {
+  page = await loginInstagramAccount(page, credentials);
+
+  if (!page) {
     return false;
-  } else {
-    page = success;
   }
+
+  logger.info(page);
 
   await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`);
 
