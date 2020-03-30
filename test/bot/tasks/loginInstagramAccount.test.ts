@@ -18,7 +18,7 @@ describe('loginInstagramAccount', function() {
       password: '',
     });
 
-    assert.strictEqual(success, false);
+    assert.strictEqual(success, undefined);
   });
 
   it('should resolve to false with authentication invalid credentials', async () => {
@@ -30,7 +30,7 @@ describe('loginInstagramAccount', function() {
       password: '123456',
     });
 
-    assert.strictEqual(success, false);
+    assert.strictEqual(success, undefined);
   });
 
   it('should login sucessfully with valid credentials', async () => {
@@ -42,6 +42,6 @@ describe('loginInstagramAccount', function() {
       password: process.env.IG_TEST_PASS!,
     });
 
-    assert.strictEqual(success, true);
+    assert.notStrictEqual(success, undefined);
   });
 });

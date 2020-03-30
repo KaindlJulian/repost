@@ -15,7 +15,7 @@ export async function createInstagramPost(
 ): Promise<boolean> {
   logger.info('Creating post with', content);
   const browser = await launch(LAUNCH_OPTIONS);
-  const page = await browser.newPage();
+  let page = await browser.newPage();
 
   await page.emulate(GALAXY_S5);
   await page
@@ -25,14 +25,11 @@ export async function createInstagramPost(
   const success = await loginInstagramAccount(page, credentials);
   if (!success) {
     return false;
+  } else {
+    page = success;
   }
 
   await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`);
-
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME!}/.pm2/logs/memes.png`,
-  });
   await page.waitForSelector('div[data-testid="new-post-button"]');
 
   // upload the image

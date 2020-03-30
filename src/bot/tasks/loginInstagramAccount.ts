@@ -10,13 +10,13 @@ import { URLS } from './task.config';
 export async function loginInstagramAccount(
   page: Page,
   credentials: InstagramCredentials
-): Promise<boolean> {
+): Promise<Page | undefined> {
   if (
     !credentials.username ||
     !credentials.password ||
     credentials.password.length < 6
   ) {
-    return false;
+    return;
   }
 
   await page.goto(URLS.INSTAGRAM_LOGIN);
@@ -34,7 +34,7 @@ export async function loginInstagramAccount(
   const error = await page.$('#slfErrorAlert');
   if (error) {
     logger.warn('Instagram login failed with', credentials);
-    return false;
+    return;
   }
-  return true;
+  return page;
 }
