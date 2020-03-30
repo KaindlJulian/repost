@@ -32,6 +32,8 @@ export async function getVideoContent(
     // TODO: getGiphyVideos
   ];
 
+  browser.close();
+
   if (!content) {
     return undefined;
   }
