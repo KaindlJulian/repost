@@ -121,17 +121,6 @@ export class Bot {
     }
   }
 
-  randomizeNextExploreSchedule() {
-    const minute = this.randomizer.number(0, 59);
-    const hour = this.randomizer.number(6, 24);
-    const newSchedule = `${minute} ${hour} * * *`; // every day at hour:minute
-    try {
-      this.exploreJob?.setTime(new CronTime(newSchedule));
-    } catch (error) {
-      logger.error('Could not set new schedule', error);
-    }
-  }
-
   /**
    * Add new subreddits
    */
@@ -162,6 +151,17 @@ export class Bot {
           this.tags
         );
       }
+    }
+  }
+
+  private randomizeNextExploreSchedule() {
+    const minute = this.randomizer.number(0, 59);
+    const hour = this.randomizer.number(6, 24);
+    const newSchedule = `${minute} ${hour} * * *`; // every day at hour:minute
+    try {
+      this.exploreJob?.setTime(new CronTime(newSchedule));
+    } catch (error) {
+      logger.error('Could not set new schedule', error);
     }
   }
 

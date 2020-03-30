@@ -27,6 +27,7 @@ export async function createInstagramPost(
     return false;
   }
 
+  await page.waitFor(2000);
   await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`);
   await page.waitFor(2000);
   await page.waitForSelector('div[data-testid="new-post-button"]');
