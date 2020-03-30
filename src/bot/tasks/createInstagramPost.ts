@@ -28,6 +28,7 @@ export async function createInstagramPost(
   }
 
   await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`);
+  await page.waitFor(2000);
   await page.waitForSelector('div[data-testid="new-post-button"]');
 
   // upload the image
@@ -36,10 +37,10 @@ export async function createInstagramPost(
     page.click('div[data-testid="new-post-button"]'),
   ]);
   await fileChooser.accept([content.filePath]);
-  await page.waitFor(1000);
+  await page.waitFor(2000);
 
   const nextButton = (await page.$x("//button[contains(text(), 'Next')]"))[0];
-  await page.waitFor(1000);
+  await page.waitFor(2000);
   await nextButton.click();
 
   // enter the post description with tags
