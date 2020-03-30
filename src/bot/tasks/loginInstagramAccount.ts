@@ -36,5 +36,6 @@ export async function loginInstagramAccount(
     logger.warn('Instagram login failed with', credentials);
     return;
   }
+
   return page;
 }
