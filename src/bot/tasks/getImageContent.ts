@@ -58,7 +58,22 @@ export async function getImageContent(
   await page.waitFor(1000);
 
   // get post content
-  const url = await filteredPosts[0].evaluate(e => e.getAttribute('src'));
+  const url = await filteredPosts[0].evaluate(e => {
+    const externalUrl = (e.parentElement?.parentElement?.parentElement
+      ?.parentElement?.parentElement?.parentElement?.previousSibling
+      ?.firstChild as HTMLElement).getAttribute('href');
+
+    console.log(externalUrl);
+
+    if (externalUrl) {
+      return externalUrl;
+    }
+
+    return e
+      .getAttribute('src')
+      ?.replace('preview', 'i')
+      .split('?')[0];
+  });
   const title = await page.evaluate(() => {
     return document.querySelectorAll('h1')[1].textContent;
   });
@@ -68,7 +83,7 @@ export async function getImageContent(
   if (url && title) {
     return {
       type: ContentType.Image,
-      url: url.replace('preview', 'i').split('?')[0],
+      url: url,
       caption: title,
     };
   } else {
