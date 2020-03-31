@@ -10,7 +10,6 @@ export const logs = (fastify: FastifyInstance, opts: any, done: Function) => {
   fastify.get('/logs/:name', logsOptions, async (request, response) => {
     if (request.params.name !== 'api') {
       const buffer = await getProcessLogs(request.params.name);
-      response.header('Content-Type', 'image/png');
       response.send(buffer);
     }
   });
