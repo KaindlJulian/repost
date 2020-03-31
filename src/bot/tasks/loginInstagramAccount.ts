@@ -28,12 +28,7 @@ export async function loginInstagramAccount(
   await page.type('[name=password', credentials.password);
   await page.click('[type=submit');
 
-  await page.waitFor(3000);
-
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME!}/.pm2/logs/memes.png`,
-  });
+  await page.waitForNavigation();
 
   // check for login error
   const error = await page.$('#slfErrorAlert');
@@ -41,6 +36,11 @@ export async function loginInstagramAccount(
     logger.warn('Instagram login failed with', credentials);
     return;
   }
+
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME!}/.pm2/logs/memes.png`,
+  });
 
   return page;
 }
