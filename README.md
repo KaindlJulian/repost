@@ -30,11 +30,12 @@ the explore job runs on a random schedule
 On startup all the bots exported from `/bots` will be loaded. A bot config follows the [pm2 app declaration](https://pm2.keymetrics.io/docs/usage/application-declaration/#javascript-format) and must at least contain following properties:
 
 ```ts
-export const images = {
-  name: 'images',
-  args:
-    '--subreddits images --schedule "0 0 12 * * *" --insta username:password',
-};
+export function memes() {
+  return {
+    name: 'memes',
+    args: '--subreddits images --schedule "0 10 * * *" --insta user:pass',
+  };
+}
 ```
 
 ### Api endpoints
