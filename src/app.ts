@@ -16,7 +16,15 @@ pm2.connect(true, err => {
   Object.values(bots).forEach(botGetter => {
     const bot = botGetter();
     pm2.start(
-      { ...bot, script: path.join(__dirname, '/bot/index.js') },
+      {
+        script: path.join(__dirname, '/bot/index.js'),
+        exec_mode: 'cluster',
+        error: `${process.env.HOME}/.pm2/logs/${bot.name}.log`,
+        output: `${process.env.HOME}/.pm2/logs/${bot.name}.log`,
+        merge_logs: true,
+        max_memory_restart: '150M',
+        ...bot,
+      },
       err => {
         if (err) {
           logger.error('PM2 Bot Startup error', {
@@ -43,7 +51,9 @@ pm2.connect(true, err => {
     },
     err => {
       if (err) {
-        logger.error('PM2 Api Startup error', { pm2: err.message });
+        logger.error('PM2 Api Startup error', {
+          pm2: err.message,
+        });
         throw err;
       }
     }

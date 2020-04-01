@@ -14,13 +14,13 @@ All bots are started and managed by pm2. Bot options are passed by arguments. Yo
 
 **required**:
 
-- `--subreddits`: List subbredit names
+- `--subreddits`: List subbredit names (comma seperated)
 - `--schedule`: The bots posting schedule in crontab syntax (seconds granularity)
 - `--insta`: The instragram credentials as `"username:password"`
 
 **optional**:
 
-- `--tags`: List of tag names (without #) included on every post
+- `--tags`: List of tag names (without #) included on every post (comma seperated)
 - `--explore`: The bot will go to the instagram explore page and like content
 
 the explore job runs on a random schedule
@@ -32,8 +32,6 @@ On startup all the bots exported from `/bots` will be loaded. A bot config follo
 ```ts
 export const images = {
   name: 'images',
-  instances: 1,
-  merge_logs: true,
   args:
     '--subreddits images --schedule "0 0 12 * * *" --insta username:password',
 };
