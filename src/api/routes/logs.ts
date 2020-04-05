@@ -1,5 +1,5 @@
 import { FastifyInstance, RouteShorthandOptions } from 'fastify';
-import { getProcessLogs } from '../../utils';
+import { getProcessLogs, getProcessScreen } from '../../utils';
 
 export const logs = (fastify: FastifyInstance, opts: any, done: Function) => {
   fastify.addHook('preHandler', fastify.auth([fastify.authenticate]));
@@ -10,7 +10,14 @@ export const logs = (fastify: FastifyInstance, opts: any, done: Function) => {
   fastify.get('/logs/:name', logsOptions, async (request, response) => {
     if (request.params.name !== 'api') {
       const buffer = await getProcessLogs(request.params.name);
-      // response.header('Content-Type', 'image/png');
+      response.send(buffer);
+    }
+  });
+
+  fastify.get('/logs/:name/screen', logsOptions, async (request, response) => {
+    if (request.params.name !== 'api') {
+      const buffer = await getProcessScreen(request.params.name);
+      response.header('Content-Type', 'image/png');
       response.send(buffer);
     }
   });
