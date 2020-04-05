@@ -6,7 +6,7 @@ import { TIMEOUT } from './config.test';
 
 dotenv.config();
 
-describe('loginInstagramAccount', function() {
+describe('loginInstagramAccount', function () {
   this.timeout(TIMEOUT);
 
   it('should resolve to false with login form invalid credentials', async () => {

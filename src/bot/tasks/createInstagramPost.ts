@@ -52,7 +52,7 @@ export async function createInstagramPost(
   await page.waitFor(500);
 
   // enter the post description with tags
-  const input = `${content.caption}\n\n${tags.map(t => `#${t}`).join(' ')}`;
+  const input = `${content.caption}\n\n${tags.map((t) => `#${t}`).join(' ')}`;
   await page.waitForSelector('textarea');
   await page.type('textarea', input);
 

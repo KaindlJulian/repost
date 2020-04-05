@@ -6,7 +6,7 @@ import { TIMEOUT } from './config.test';
 
 dotenv.config();
 
-describe('downloadContent', function() {
+describe('downloadContent', function () {
   this.timeout(TIMEOUT);
 
   it('should return undefined for content with empty url', async () => {

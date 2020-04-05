@@ -6,8 +6,8 @@ import { BotStatus } from '../types';
  * Collect pm2 process information about a bot
  */
 export function getBotStatus(name: string): Promise<BotStatus> {
-  return new Promise(resolve => {
-    pm2.connect(err => {
+  return new Promise((resolve) => {
+    pm2.connect(true, (err) => {
       if (err) {
         logger.error('PM2 Connect Error', err);
         throw err;

@@ -80,7 +80,7 @@ export async function exploreAndLike(
 async function scroll(page: Page, yCoord: number) {
   console.log('scrolling to', yCoord);
 
-  await page.evaluate(yCoord => {
+  await page.evaluate((yCoord) => {
     console.log(yCoord);
     window.scrollBy(yCoord, window.innerHeight);
   }, yCoord);

@@ -4,7 +4,7 @@ import { ProcessMessage } from '../../types';
 
 export function sendMessageToProcess(name: string, message: ProcessMessage) {
   // connect to pm2
-  pm2.connect(err => {
+  pm2.connect((err) => {
     if (err) {
       logger.error('PM2 Connect Error', err);
     }
@@ -17,7 +17,7 @@ export function sendMessageToProcess(name: string, message: ProcessMessage) {
       }
 
       // filter by name
-      const filteredList = list.filter(p => p.name === name);
+      const filteredList = list.filter((p) => p.name === name);
 
       if (!filteredList) {
         logger.warn('PM2 Bot not found');
@@ -32,7 +32,7 @@ export function sendMessageToProcess(name: string, message: ProcessMessage) {
           data: message,
           topic: 'bot',
         },
-        err => {
+        (err) => {
           if (err) {
             logger.error('PM2 Message Error', err);
           }

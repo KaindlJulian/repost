@@ -37,8 +37,8 @@ export async function getImageContent(
   const imagePosts = await page.$$('img.ImageBox-image.media-element');
 
   // filter out ads and already used posts
-  const filteredPosts = imagePosts.filter(async handle => {
-    const data = await handle.evaluate(e => {
+  const filteredPosts = imagePosts.filter(async (handle) => {
+    const data = await handle.evaluate((e) => {
       return {
         target: e.getAttribute('target')!,
         src: e.getAttribute('src')!,
@@ -58,7 +58,7 @@ export async function getImageContent(
   await page.waitFor(1000);
 
   // get post content
-  const url = await filteredPosts[0].evaluate(e => {
+  const url = await filteredPosts[0].evaluate((e) => {
     const externalUrl = (e.parentElement?.parentElement?.parentElement
       ?.parentElement?.parentElement?.parentElement?.previousSibling
       ?.firstChild as HTMLElement).getAttribute('href');
@@ -69,10 +69,7 @@ export async function getImageContent(
       return externalUrl;
     }
 
-    return e
-      .getAttribute('src')
-      ?.replace('preview', 'i')
-      .split('?')[0];
+    return e.getAttribute('src')?.replace('preview', 'i').split('?')[0];
   });
   const title = await page.evaluate(() => {
     return document.querySelectorAll('h1')[1].textContent;

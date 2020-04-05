@@ -48,8 +48,8 @@ export async function getVideoContent(
 async function getRedditGifs(page: Page): Promise<Content[]> {
   const handles = await page.$$('source[src*="gif"]');
 
-  const filtered = handles.filter(async handle => {
-    const data = await handle.evaluate(e => {
+  const filtered = handles.filter(async (handle) => {
+    const data = await handle.evaluate((e) => {
       return e.getAttribute('src')!;
     });
     !Cache.instance.has(data);
@@ -58,7 +58,7 @@ async function getRedditGifs(page: Page): Promise<Content[]> {
   const gifType = ContentType.Gif;
 
   return await Promise.all(
-    filtered.map(async handle => {
+    filtered.map(async (handle) => {
       return (await handle.evaluate(async (e, gifType) => {
         e.parentElement?.click();
         const url = e.getAttribute('src')!;
@@ -80,17 +80,17 @@ async function getRedditGifs(page: Page): Promise<Content[]> {
 async function getImgurVideos(page: Page): Promise<Content[]> {
   const handles = await page.$$('a[href*="gifv"][class]');
 
-  const filtered = handles.filter(async handle => {
-    const data = await handle.evaluate(e => {
+  const filtered = handles.filter(async (handle) => {
+    const data = await handle.evaluate((e) => {
       return e.getAttribute('href')!;
     });
     !Cache.instance.has(data);
   });
 
   return await Promise.all(
-    filtered.map(async handle => {
+    filtered.map(async (handle) => {
       await page.waitFor(1000);
-      await page.goto(await handle.evaluate(e => e.getAttribute('href')!));
+      await page.goto(await handle.evaluate((e) => e.getAttribute('href')!));
       await page.waitFor(1000);
 
       return {

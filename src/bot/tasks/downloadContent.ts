@@ -99,7 +99,7 @@ async function convertVideo(page: Page, content: Content): Promise<Content> {
   // get converted gif direct link
   const gifUrl = await (
     await page.waitForSelector('img[alt="[video-to-gif output image]"]')
-  ).evaluate(element => {
+  ).evaluate((element) => {
     return `https:${element.getAttribute('src')}`;
   });
 

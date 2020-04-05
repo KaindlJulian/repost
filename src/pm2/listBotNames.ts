@@ -2,8 +2,8 @@ import pm2 from 'pm2';
 import { logger } from '../logger';
 
 export function listBotNames(): Promise<string[]> {
-  return new Promise(resolve => {
-    pm2.connect(true, err => {
+  return new Promise((resolve) => {
+    pm2.connect(true, (err) => {
       if (err) {
         logger.error('PM2 Connect Error', err);
         throw err;
@@ -16,7 +16,7 @@ export function listBotNames(): Promise<string[]> {
         }
 
         resolve(
-          descriptionList.filter(d => d.name !== 'api').map(d => d.name!)
+          descriptionList.filter((d) => d.name !== 'api').map((d) => d.name!)
         );
       });
     });

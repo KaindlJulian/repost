@@ -33,19 +33,19 @@ server.get('/', {}, (request, response) => {
 });
 
 server.register(auth).after(() => {
-  Object.values(routes).forEach(r => {
+  Object.values(routes).forEach((r) => {
     server.register(r, { prefix: 'api' });
   });
 });
 
-server.ready(err => {
+server.ready((err) => {
   if (err) {
     throw err;
   }
   server.swagger();
 });
 
-server.listen(PORT, '0.0.0.0', err => {
+server.listen(PORT, '0.0.0.0', (err) => {
   if (err) {
     throw err;
   }

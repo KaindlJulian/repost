@@ -6,7 +6,7 @@ import { TIMEOUT } from './config.test';
 
 dotenv.config();
 
-describe('createInstagramPost', function() {
+describe('createInstagramPost', function () {
   this.timeout(TIMEOUT);
 
   it('should create a new image post', async () => {

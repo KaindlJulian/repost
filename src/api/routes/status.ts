@@ -12,7 +12,7 @@ export const status = (fastify: FastifyInstance, opts: any, done: Function) => {
     const status = {};
 
     await Promise.all(
-      names.map(async n => {
+      names.map(async (n) => {
         const s = await getBotStatus(n);
         Object.defineProperty(status, n, {
           value: s,

@@ -6,14 +6,14 @@ import * as bots from '../bots';
 
 dotenv.config();
 
-pm2.connect(true, err => {
+pm2.connect(true, (err) => {
   if (err) {
     logger.error('PM2 Connect Error', err);
     process.exit(1);
   }
 
   // start all the bots
-  Object.values(bots).forEach(botGetter => {
+  Object.values(bots).forEach((botGetter) => {
     const bot = botGetter();
     pm2.start(
       {
@@ -25,7 +25,7 @@ pm2.connect(true, err => {
         max_memory_restart: '150M',
         ...bot,
       },
-      err => {
+      (err) => {
         if (err) {
           logger.error('PM2 Bot Startup error', {
             pm2: err.message,
@@ -49,7 +49,7 @@ pm2.connect(true, err => {
         NODE_ENV: process.env.NODE_ENV!,
       },
     },
-    err => {
+    (err) => {
       if (err) {
         logger.error('PM2 Api Startup error', {
           pm2: err.message,

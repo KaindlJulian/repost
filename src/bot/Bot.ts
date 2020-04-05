@@ -17,7 +17,7 @@ import {
   exploreAndLike,
 } from './tasks';
 
-const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days in seconds
+const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
 const REDDIT_URL = 'https://www.reddit.com/r/';
 
@@ -61,7 +61,7 @@ export class Bot {
       this.instagramCredentials.username
     );
 
-    const subreddits: Subreddit[] = args.subredditNames.map(n => {
+    const subreddits: Subreddit[] = args.subredditNames.map((n) => {
       return {
         name: n,
         url: `${REDDIT_URL}${n}`,
@@ -125,7 +125,7 @@ export class Bot {
    * Add new subreddits
    */
   addSubreddits(names: string[]) {
-    const subs = names.map(n => {
+    const subs = names.map((n) => {
       return {
         name: n,
         url: `${REDDIT_URL}${n}`,
@@ -154,6 +154,9 @@ export class Bot {
     }
   }
 
+  /**
+   * Changes next job schedule for the explore job
+   */
   private randomizeNextExploreSchedule() {
     const minute = this.randomizer.number(0, 59);
     const hour = this.randomizer.number(6, 24);

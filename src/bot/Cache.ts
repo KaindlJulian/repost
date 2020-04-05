@@ -19,7 +19,7 @@ export class Cache {
     });
 
     // we log some cache events
-    LOGGED_EVENTS.forEach(e => this._cache.addListener(e, () => logEvent(e)));
+    LOGGED_EVENTS.forEach((e) => this._cache.addListener(e, () => logEvent(e)));
   }
 
   static createInstance(ttl: number) {

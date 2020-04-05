@@ -8,7 +8,7 @@ import { writePm2ConfigToFile } from '../utils/writePm2ConfigToFile';
  * Start a new Bot with name and options managed by pm2
  */
 export function startNewBot(name: string, options: BotOptions) {
-  pm2.connect(err => {
+  pm2.connect(true, (err) => {
     if (err) {
       logger.error('PM2 Connect Error', err);
       throw err;
@@ -16,7 +16,7 @@ export function startNewBot(name: string, options: BotOptions) {
 
     const config = generatePm2Config(name, options);
 
-    pm2.start(config, err => {
+    pm2.start(config, (err) => {
       if (err) {
         logger.error('PM2 App Startup error', err);
       } else {
