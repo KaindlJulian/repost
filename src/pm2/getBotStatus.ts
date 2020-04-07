@@ -6,17 +6,21 @@ import { BotStatus } from '../types';
  * Collect pm2 process information about a bot
  */
 export function getBotStatus(name: string): Promise<BotStatus> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    if (name === 'api') {
+      reject('Access to api not allowed');
+    }
+
     pm2.connect(true, (err) => {
       if (err) {
         logger.error('PM2 Connect Error', err);
-        throw err;
+        reject(err);
       }
 
       pm2.describe(name, (err, proc) => {
         if (err) {
           logger.error('PM2 Describe Error', err);
-          return;
+          reject(err);
         }
 
         const description = proc[0];

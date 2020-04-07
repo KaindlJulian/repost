@@ -27,7 +27,7 @@ const bot = new Bot(options);
 bot.start();
 
 // pm2 process messages
-process.on('message', data => {
+process.on('message', (data) => {
   const message: ProcessMessage = data.data;
   switch (message.type) {
     case MessageType.AddSubredditMessage:
@@ -39,6 +39,8 @@ process.on('message', data => {
     case MessageType.CreatePostMessage:
       bot.createPost(message.value);
       break;
+    case MessageType.GetInstagramChatsMessage:
+      bot.getInstagramChats();
   }
 });
 

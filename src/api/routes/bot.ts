@@ -5,8 +5,14 @@ import {
   addSubreddits,
   changeSchedule,
   runAction,
+  getInstagramChats,
 } from '../../pm2';
-import { BotOptions, Pm2ProcessAction } from '../../types';
+import {
+  BotOptions,
+  Pm2ProcessAction,
+  ProcessMessage,
+  MessageType,
+} from '../../types';
 import { isValidCron } from 'cron-validator';
 import { createPost } from '../../pm2/messages/createPost';
 
@@ -25,7 +31,11 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
    * Create a new bot
    */
   fastify.post('/bot', createOptions, (request, response) => {
-    if (!isValidCron(request.body.schedule, { seconds: true })) {
+    if (
+      !isValidCron(request.body.schedule, {
+        seconds: true,
+      })
+    ) {
       response.code(400).send({
         statusCode: 400,
         error: 'Bad Request',
@@ -70,7 +80,11 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
    * Change the post schedule on a given bot
    */
   fastify.post('/bot/:name/schedule', scheduleOptions, (request, response) => {
-    if (!isValidCron(request.body.newSchedule, { seconds: true })) {
+    if (
+      !isValidCron(request.body.newSchedule, {
+        seconds: true,
+      })
+    ) {
       response.code(400).send({
         statusCode: 400,
         error: 'Bad Request',
@@ -99,6 +113,30 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
         message:
           'Following Actions are allowed: "Restart", "Stop", "Delete". Case sensitive!',
       });
+    }
+  });
+
+  /**
+   * Return all chats
+   */
+  fastify.get('/bot/:name/chat', getChatsOptions, async (request, response) => {
+    const names = await listBotNames();
+
+    if (!names.includes(request.params.name)) {
+      response.code(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: 'This bot does not exist',
+      });
+    } else {
+      process.on('message', (data) => {
+        const message: ProcessMessage = data.data;
+        if (message.type === MessageType.SendInstagramChatsMessage) {
+          response.send(message.value);
+        }
+      });
+
+      getInstagramChats(request.params.name);
     }
   });
 
@@ -324,6 +362,29 @@ const actionOptions: RouteShorthandOptions = {
           example: 'Restart',
           description:
             'The pm2 action to run for the bot. Possible values: "Stop", "Restart", "Delete".',
+        },
+      },
+    },
+  },
+};
+
+const getChatsOptions: RouteShorthandOptions = {
+  schema: {
+    tags: ['bot'],
+    description: 'Get the direct messages of the bot account',
+    summary: 'Get list of all last direct messages',
+    security: [
+      {
+        apiKey: [],
+      },
+    ],
+    params: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Name of a running bot',
+          example: 'myBot',
         },
       },
     },

@@ -4,3 +4,6 @@ export * from './getBotStatus';
 export * from './runAction';
 export * from './startNewBot';
 export * from './listBotNames';
+export * from './messages/createPost';
+export * from './messages/sendInstagramChats';
+export * from './messages/getInstagramChats';

@@ -17,6 +17,7 @@ const URLS = {
   INSTAGRAM: 'https://www.instagram.com',
   INSTAGRAM_EXPLORE: 'https://www.instagram.com/explore',
   INSTAGRAM_LOGIN: 'https://www.instagram.com/accounts/login/',
+  INSTAGRAM_CHATS: 'https://www.instagram.com/direct/inbox/',
   VIDEO_TO_GIF: 'https://ezgif.com/video-to-gif',
 };
 

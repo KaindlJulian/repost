@@ -15,7 +15,9 @@ import {
   downloadContent,
   getVideoContent,
   exploreAndLike,
+  collectChats,
 } from './tasks';
+import { sendInstagramChats } from '../pm2';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -134,6 +136,12 @@ export class Bot {
     });
 
     this.subreddits.push(...subs);
+  }
+
+  async getInstagramChats() {
+    logger.info('Collecting instagram chats');
+    const chats = await collectChats(this.instagramCredentials);
+    sendInstagramChats('api', chats);
   }
 
   /**

@@ -4,3 +4,4 @@ export * from './downloadContent';
 export * from './loginInstagramAccount';
 export * from './getVideoContent';
 export * from './exploreAndLike';
+export * from './collectChats';
