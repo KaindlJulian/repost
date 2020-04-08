@@ -144,7 +144,6 @@ export class Bot {
   }
 
   async getInstagramChats() {
-    logger.info('Collecting instagram chats');
     const chats = await collectChats(this.instagramCredentials);
     sendInstagramChats('api', chats);
   }
