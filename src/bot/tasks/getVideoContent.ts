@@ -2,6 +2,7 @@ import { launch, Page } from 'puppeteer';
 import { Content, ContentType } from '../../types';
 import { LAUNCH_OPTIONS } from './task.config';
 import { Cache } from '../Cache';
+import { logger } from '../../logger';
 
 /**
  * Tries to get a gif/video (in this order) and text from a subreddit.
@@ -17,7 +18,7 @@ export async function getVideoContent(
 
   await page.browserContext().overridePermissions(redditUrl, []);
 
-  await page.goto(redditUrl);
+  await page.goto(redditUrl, { waitUntil: 'networkidle2' });
   await page.waitFor(3000);
 
   // check if subreddit exists
@@ -46,6 +47,7 @@ export async function getVideoContent(
  * Returned Content is filtered, not in the cache
  */
 async function getRedditGifs(page: Page): Promise<Content[]> {
+  logger.info('Getting reddit gifs');
   const handles = await page.$$('source[src*="gif"]');
 
   const filtered = handles.filter(async (handle) => {
@@ -78,6 +80,7 @@ async function getRedditGifs(page: Page): Promise<Content[]> {
  * Returned Content is filtered, not in the cache
  */
 async function getImgurVideos(page: Page): Promise<Content[]> {
+  logger.info('Getting imgur videos');
   const handles = await page.$$('a[href*="gifv"][class]');
 
   const filtered = handles.filter(async (handle) => {

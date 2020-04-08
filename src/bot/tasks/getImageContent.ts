@@ -17,7 +17,9 @@ export async function getImageContent(
 
   await page.browserContext().overridePermissions(redditUrl, []);
 
-  await page.goto(redditUrl);
+  await page.goto(redditUrl, { waitUntil: 'networkidle2' });
+
+  logger.info('Getting image Content from', redditUrl);
 
   try {
     // wait until image posts are loaded
@@ -71,6 +73,7 @@ export async function getImageContent(
 
     return e.getAttribute('src')?.replace('preview', 'i').split('?')[0];
   });
+
   const title = await page.evaluate(() => {
     return document.querySelectorAll('h1')[1].textContent;
   });

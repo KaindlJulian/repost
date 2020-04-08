@@ -8,6 +8,8 @@ export async function collectChats(credentials: InstagramCredentials) {
   const browser = await launch(LAUNCH_OPTIONS);
   let page: Page | undefined = await browser.newPage();
 
+  logger.info('Collecting chats for', credentials.username);
+
   await page.emulate(GALAXY_S5);
   await page.browserContext().overridePermissions(URLS.INSTAGRAM, []);
 
@@ -18,7 +20,7 @@ export async function collectChats(credentials: InstagramCredentials) {
     return [];
   }
 
-  await page.goto(URLS.INSTAGRAM_CHATS);
+  await page.goto(URLS.INSTAGRAM_CHATS, { waitUntil: 'networkidle2' });
 
   await page.waitFor(1000);
 

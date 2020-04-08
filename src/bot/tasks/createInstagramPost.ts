@@ -29,7 +29,9 @@ export async function createInstagramPost(
   }
 
   await page.waitFor(1000);
-  await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`);
+  await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`, {
+    waitUntil: 'networkidle2',
+  });
 
   await page.waitForSelector('div[data-testid="new-post-button"]');
 

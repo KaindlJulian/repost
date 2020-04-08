@@ -22,7 +22,7 @@ pm2.connect(true, (err) => {
         error: `${process.env.HOME}/.pm2/logs/${bot.name}.log`,
         output: `${process.env.HOME}/.pm2/logs/${bot.name}.log`,
         merge_logs: true,
-        max_memory_restart: '150M',
+        max_memory_restart: '200M',
         ...bot,
       },
       (err) => {

@@ -89,7 +89,11 @@ export class Bot {
       });
     }
 
-    args.instagramCredentials.password.replace(/\w/gi, '*');
+    args.instagramCredentials.password = args.instagramCredentials.password.replace(
+      /\w/gi,
+      '*'
+    );
+
     logger.info('New Bot created', {
       options: args,
     });

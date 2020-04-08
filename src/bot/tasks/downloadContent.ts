@@ -51,7 +51,7 @@ async function handleFile(
     return undefined;
   }
 
-  const source = await page.goto(content.url);
+  const source = await page.goto(content.url, { waitUntil: 'networkidle2' });
 
   if (!source) {
     logger.warn('No file found on', content.url);
@@ -62,7 +62,9 @@ async function handleFile(
     await fs.access(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
   } catch (err) {
     logger.error('Couldnt access download directory', err);
-    await fs.mkdir(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
+    const newDir = path.resolve(__dirname, FILE_DOWNLOAD_DIR);
+    logger.info('Creating download directory', newDir);
+    await fs.mkdir(newDir);
   }
 
   const file = path.resolve(
@@ -82,7 +84,9 @@ async function handleFile(
  * Converts video content to gif content
  */
 async function convertVideo(page: Page, content: Content): Promise<Content> {
-  await page.goto(URLS.VIDEO_TO_GIF);
+  await page.goto(URLS.VIDEO_TO_GIF, { waitUntil: 'networkidle2' });
+
+  logger.info('Converting video to gif', content);
 
   // enter mp4 url and submit
   await page.type('[name="new-image-url"]', content.url);

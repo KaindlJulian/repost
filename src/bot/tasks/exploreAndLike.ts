@@ -3,6 +3,7 @@ import { LAUNCH_OPTIONS, URLS, GALAXY_S5 } from './task.config';
 import { Randomizer } from '../Randomizer';
 import { InstagramCredentials } from '../../types';
 import { loginInstagramAccount } from './loginInstagramAccount';
+import { logger } from '../../logger';
 
 /**
  * This function should emulate some real user activity.
@@ -33,8 +34,10 @@ export async function exploreAndLike(
 
   const maxLikes = randomizer.number(0, 4);
 
+  logger.info('Exploring and liking posts', { amount: maxLikes });
+
   // 1) Go to explore page
-  await page.goto(URLS.INSTAGRAM_EXPLORE);
+  await page.goto(URLS.INSTAGRAM_EXPLORE, { waitUntil: 'networkidle2' });
   await page.emulate(GALAXY_S5);
 
   for (let likes = 0; likes < maxLikes; ) {
@@ -66,7 +69,7 @@ export async function exploreAndLike(
     if (randomizer.evaluatePercentage(randomizer.float(0.05, 0.45))) {
       const likeButton = await page.waitForSelector('svg[aria-label="Like"]');
       await likeButton.tap();
-      console.log(page.url);
+      logger.info('Liked a post!', page.url);
       likes++;
     }
 

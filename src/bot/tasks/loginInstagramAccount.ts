@@ -11,25 +11,31 @@ export async function loginInstagramAccount(
   page: Page,
   credentials: InstagramCredentials
 ): Promise<Page | undefined> {
+  logger.info('Logging into instagram account', credentials.username);
+
   if (
     !credentials.username ||
     !credentials.password ||
     credentials.password.length < 6
   ) {
+    logger.warn(
+      'Tried to login with invalid credentials',
+      credentials.username
+    );
     return;
   }
 
-  await page.goto(URLS.INSTAGRAM_LOGIN);
+  await page.goto(URLS.INSTAGRAM_LOGIN, { waitUntil: 'networkidle2' });
 
   await page.waitForSelector('[name=username]');
 
   // type in credentials and click submit
-  await page.type('[name=username]', credentials.username);
-  await page.type('[name=password', credentials.password);
+  await page.type('[name=username]', credentials.username, { delay: 50 });
+  await page.type('[name=password', credentials.password, { delay: 50 });
   await page.waitFor(2000);
   await page.click('[type=submit');
 
-  await page.waitFor(3000);
+  await page.waitFor(4000);
 
   await page.screenshot({
     type: 'png',
@@ -42,6 +48,8 @@ export async function loginInstagramAccount(
     logger.warn('Instagram login failed with', credentials);
     return;
   }
+
+  logger.info('Successfully logged in', credentials.username);
 
   return page;
 }
