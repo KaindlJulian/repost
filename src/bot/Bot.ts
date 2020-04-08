@@ -18,6 +18,7 @@ import {
   collectChats,
 } from './tasks';
 import { sendInstagramChats } from '../pm2';
+import { replaceText } from '../utils/replaceText';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -89,8 +90,8 @@ export class Bot {
       });
     }
 
-    args.instagramCredentials.password = args.instagramCredentials.password.replace(
-      /\w/gi,
+    args.instagramCredentials.password = replaceText(
+      args.instagramCredentials.password,
       '*'
     );
 
