@@ -37,6 +37,11 @@ export async function collectChats(credentials: InstagramCredentials) {
   const avatars = await page.$$('img[alt*="profile"]');
   logger.info('Found avatars', avatars);
 
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  });
+
   return await Promise.all(
     avatars.map(async (handle) => {
       return await handle.evaluate((e) => {
