@@ -22,12 +22,15 @@ export async function collectChats(credentials: InstagramCredentials) {
 
   await page.goto(URLS.INSTAGRAM_CHATS, { waitUntil: 'networkidle2' });
 
-  await page.waitFor(1000);
+  await page.waitFor(2000);
 
   const nextButton = (
     await page.$x("//button[contains(text(), 'Not Now')]")
   )[0];
-  await nextButton.click();
+
+  if (nextButton) {
+    await nextButton.click();
+  }
 
   const avatars = await page.$$('img[alt*="profile"]');
 
