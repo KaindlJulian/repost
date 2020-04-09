@@ -137,6 +137,9 @@ export class Bot {
     this.subreddits.push(...subs);
   }
 
+  /**
+   * Collects instagram direct message chats and sends them to the api
+   */
   async getInstagramChats() {
     const chats = await collectChats(this.instagramCredentials);
     sendInstagramChats('api', chats);
