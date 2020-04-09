@@ -10,7 +10,7 @@ describe('loginInstagramAccount', function () {
   this.timeout(TIMEOUT);
 
   it('should resolve to false with login form invalid credentials', async () => {
-    const browser = await launch({ headless: true });
+    const browser = await launch();
     const page = await browser.newPage();
 
     const success = await loginInstagramAccount(page, {
@@ -22,7 +22,7 @@ describe('loginInstagramAccount', function () {
   });
 
   it('should resolve to false with authentication invalid credentials', async () => {
-    const browser = await launch({ headless: true });
+    const browser = await launch();
     const page = await browser.newPage();
 
     const success = await loginInstagramAccount(page, {
@@ -34,7 +34,7 @@ describe('loginInstagramAccount', function () {
   });
 
   it('should login sucessfully with valid credentials', async () => {
-    const browser = await launch({ headless: true });
+    const browser = await launch();
     const page = await browser.newPage();
 
     const success = await loginInstagramAccount(page, {

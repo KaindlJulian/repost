@@ -18,7 +18,6 @@ import {
   collectChats,
 } from './tasks';
 import { sendInstagramChats } from '../pm2';
-import { replaceText } from '../utils/replaceText';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -89,11 +88,6 @@ export class Bot {
         this.randomizeNextExploreSchedule();
       });
     }
-
-    args.instagramCredentials.password = replaceText(
-      args.instagramCredentials.password,
-      '*'
-    );
 
     logger.info('New Bot created', {
       options: args,

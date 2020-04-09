@@ -18,12 +18,7 @@ export async function collectChats(credentials: InstagramCredentials) {
     return [];
   }
 
-  logger.info(page.url());
-  await page.waitFor(2000);
-  logger.info(page.url());
   await page.goto(URLS.INSTAGRAM_CHATS, { waitUntil: 'networkidle2' });
-  await page.waitFor(2000);
-  logger.info(page.url());
 
   logger.info('Collecting chats for', credentials.username);
 
@@ -40,11 +35,6 @@ export async function collectChats(credentials: InstagramCredentials) {
 
   const avatars = await page.$$('img[alt*="profile"]');
   logger.info('Found avatars', avatars);
-
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME}/.pm2/logs/memes.png`,
-  });
 
   return await Promise.all(
     avatars.map(async (handle) => {

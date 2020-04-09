@@ -27,6 +27,15 @@ export async function loginInstagramAccount(
 
   await page.goto(URLS.INSTAGRAM_LOGIN, { waitUntil: 'networkidle2' });
 
+  if (await isValidSession(page)) {
+    return page;
+  }
+
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  });
+
   await page.waitForSelector('[name=username]');
 
   // type in credentials and click submit
@@ -47,4 +56,9 @@ export async function loginInstagramAccount(
   logger.info('Successfully logged in', credentials.username);
 
   return page;
+}
+
+async function isValidSession(page: Page) {
+  const cookies = await page.cookies();
+  return cookies.filter((c) => c.name === 'sessionid').length === 1;
 }

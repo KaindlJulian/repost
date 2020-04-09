@@ -8,7 +8,9 @@ const LAUNCH_OPTIONS: LaunchOptions = {
   args: process.env.NODE_ENV === 'production' ? ['--no-sandbox'] : undefined,
   slowMo: process.env.NODE_ENV === 'production' ? undefined : 100,
   userDataDir:
-    process.env.NODE_ENV === 'production' ? __dirname + '/user_dir' : undefined,
+    process.env.NODE_ENV === 'production'
+      ? __dirname + '/user_dir'
+      : __dirname + '/user_dir',
 };
 
 const FILE_DOWNLOAD_DIR = '../../../downloads';
