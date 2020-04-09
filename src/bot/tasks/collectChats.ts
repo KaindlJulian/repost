@@ -30,8 +30,14 @@ export async function collectChats(credentials: InstagramCredentials) {
     await nextButton.click();
   }
 
-  page.waitForSelector('img[alt*="profile"]');
-  page.waitFor(2000);
+  await page.waitFor(2000);
+
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  });
+
+  await page.waitForSelector('img[alt*="profile"]');
 
   const avatars = await page.$$('img[alt*="profile"]');
   logger.info('Found avatars', avatars);

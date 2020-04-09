@@ -31,11 +31,6 @@ export async function loginInstagramAccount(
     return page;
   }
 
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME}/.pm2/logs/memes.png`,
-  });
-
   await page.waitForSelector('[name=username]');
 
   // type in credentials and click submit
