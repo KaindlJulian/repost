@@ -40,7 +40,7 @@ export async function collectChats(credentials: InstagramCredentials) {
   await page.waitForSelector('img[alt*="profile"]');
 
   const avatars = await page.$$('img[alt*="profile"]');
-  logger.info('Found avatars', avatars);
+  logger.info('Found avatars', { amount: avatars.length });
 
   return await Promise.all(
     avatars.map(async (handle) => {
