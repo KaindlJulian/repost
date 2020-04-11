@@ -6,6 +6,7 @@ import {
   changeSchedule,
   runAction,
   getInstagramChats,
+  createPost,
 } from '../../pm2';
 import {
   BotOptions,
@@ -14,7 +15,6 @@ import {
   MessageType,
 } from '../../types';
 import { isValidCron } from 'cron-validator';
-import { createPost } from '../../pm2/messages/createPost';
 
 export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
   fastify.addHook('preHandler', fastify.auth([fastify.authenticate]));
