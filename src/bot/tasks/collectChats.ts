@@ -4,7 +4,12 @@ import { URLS, GALAXY_S5, LAUNCH_OPTIONS } from './task.config';
 import { loginInstagramAccount } from './loginInstagramAccount';
 import { logger } from '../../logger';
 
-export async function collectChats(credentials: InstagramCredentials) {
+/**
+ * Collects data from the bots instagram inbox
+ */
+export async function collectChats(
+  credentials: InstagramCredentials
+): Promise<InstagramChat[]> {
   const browser = await launch(LAUNCH_OPTIONS);
   let page: Page | undefined = await browser.newPage();
 
@@ -22,27 +27,24 @@ export async function collectChats(credentials: InstagramCredentials) {
 
   logger.info('Collecting chats for', credentials.username);
 
+  // close popup
   const nextButton = (
     await page.$x("//button[contains(text(), 'Not Now')]")
   )[0];
-
   if (nextButton) {
     await nextButton.click();
   }
 
   await page.waitFor(2000);
 
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME}/.pm2/logs/memes.png`,
-  });
-
   await page.waitForSelector('img[alt*="profile"]');
 
+  // get element handles for all avatars
   const avatars = await page.$$('img[alt*="profile"]');
   logger.info('Found avatars', { amount: avatars.length });
 
-  return await Promise.all(
+  // iterate handles and evaluate to an InstagramChat object
+  const result = await Promise.all(
     avatars.map(async (handle) => {
       return await handle.evaluate((e) => {
         const avatarUrl = e.getAttribute('src')!;
@@ -63,4 +65,8 @@ export async function collectChats(credentials: InstagramCredentials) {
       });
     })
   );
+
+  await browser.close();
+
+  return result;
 }

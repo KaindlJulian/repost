@@ -53,6 +53,9 @@ export async function loginInstagramAccount(
   return page;
 }
 
+/**
+ * Check if the chromium user dir has a session cookie
+ */
 async function isValidSession(page: Page) {
   const cookies = await page.cookies();
   return cookies.filter((c) => c.name === 'sessionid').length === 1;
