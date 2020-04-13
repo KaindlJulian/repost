@@ -6,11 +6,9 @@ import { logger } from '../../logger';
  * Add subreddits to a given bot
  */
 export function createPost(name: string, caption?: string, url?: string) {
-  logger.info(url || 'undefind');
+  logger.info('Creating post from api', { caption, url });
 
-  const urlFileExt = caption
-    ?.split('.')
-    [caption?.split('.').length - 1].toLowerCase();
+  const urlFileExt = url?.split('.')[url?.split('.').length - 1].toLowerCase();
 
   let type;
   switch (urlFileExt) {
@@ -31,5 +29,6 @@ export function createPost(name: string, caption?: string, url?: string) {
     type: MessageType.CreatePostMessage,
     value: caption && url && type ? { caption, url, type } : undefined,
   };
+
   sendMessageToProcess(name, message);
 }

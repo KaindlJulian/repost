@@ -22,8 +22,6 @@ export const status = (fastify: FastifyInstance, opts: any, done: Function) => {
       })
     );
 
-    console.log(status);
-
     response.send(status);
   });
 
