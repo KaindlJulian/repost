@@ -49,11 +49,16 @@ export async function collectChats(credentials: InstagramCredentials) {
         const data = e.parentElement?.parentElement?.parentElement?.parentElement?.innerText.split(
           '\n'
         )!;
+        const datetime = e.parentElement?.parentElement?.parentElement?.parentElement
+          ?.querySelector('time')
+          ?.getAttribute('datetime');
+
         return {
           avatarUrl,
           username: data[0],
           lastMessage: data[1],
-          lastSeen: data[3],
+          dateFormatted: data[3],
+          date: datetime,
         } as InstagramChat;
       });
     })
