@@ -20,13 +20,16 @@ export async function downloadContent(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
+  // @ts-ignore
+  await page._client.send('Network.enable', {
+    maxResourceBufferSize: 1024 * 1204 * 100,
+    maxTotalBufferSize: 1024 * 1204 * 200,
+  });
+
   let downloadedContent = undefined;
 
   switch (content.type) {
-    case ContentType.Image:
-      downloadedContent = await handleFile(page, content);
-      break;
-    case ContentType.Gif:
+    case ContentType.Image || ContentType.Gif:
       downloadedContent = await handleFile(page, content);
       break;
     case ContentType.Video:
