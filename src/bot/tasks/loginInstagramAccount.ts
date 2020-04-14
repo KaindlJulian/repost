@@ -11,7 +11,9 @@ export async function loginInstagramAccount(
   page: Page,
   credentials: InstagramCredentials
 ): Promise<Page | undefined> {
-  logger.info('Logging into instagram account', credentials.username);
+  logger.info('Logging into instagram account', {
+    username: credentials.username,
+  });
 
   if (
     !credentials.username ||
@@ -48,7 +50,7 @@ export async function loginInstagramAccount(
     return;
   }
 
-  logger.info('Successfully logged in', credentials.username);
+  logger.info('Successfully logged in', { username: credentials.username });
 
   return page;
 }

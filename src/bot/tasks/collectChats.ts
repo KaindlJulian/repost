@@ -25,7 +25,7 @@ export async function collectChats(
 
   await page.goto(URLS.INSTAGRAM_CHATS, { waitUntil: 'networkidle2' });
 
-  logger.info('Collecting chats for', credentials.username);
+  logger.info('Collecting chats', { account: credentials.username });
 
   // close popup
   const nextButton = (
