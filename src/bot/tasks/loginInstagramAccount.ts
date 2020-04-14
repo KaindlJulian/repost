@@ -60,5 +60,7 @@ export async function loginInstagramAccount(
  */
 async function isValidSession(page: Page) {
   const cookies = await page.cookies();
-  return cookies.filter((c) => c.name === 'sessionid').length === 1;
+  const sessionIdCookies = cookies.filter((c) => c.name === 'sessionid');
+  logger.info('Instagram Session', { ...sessionIdCookies[0] });
+  return sessionIdCookies.length === 1 && sessionIdCookies[0].value !== '';
 }
