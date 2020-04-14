@@ -20,20 +20,21 @@ export async function downloadContent(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
-  // @ts-ignore
-  await page._client.send('Network.enable', {
-    maxResourceBufferSize: 1024 * 1204 * 100,
-    maxTotalBufferSize: 1024 * 1204 * 200,
-  });
-
   let downloadedContent = undefined;
 
+  logger.info('Trying to download content', { content });
+
   switch (content.type) {
-    case ContentType.Image || ContentType.Gif:
+    case ContentType.Image:
+      downloadedContent = await handleFile(page, content);
+      break;
+    case ContentType.Gif:
+      await maxOutDevToolsResourceBuffer(page);
       downloadedContent = await handleFile(page, content);
       break;
     case ContentType.Video:
       const convertedContent = await convertVideo(page, content);
+      await maxOutDevToolsResourceBuffer(page);
       downloadedContent = await handleFile(page, convertedContent);
       break;
   }
@@ -119,4 +120,12 @@ async function convertVideo(page: Page, content: Content): Promise<Content> {
   logger.info('Converted: ', content, convertedContent);
 
   return convertedContent;
+}
+
+async function maxOutDevToolsResourceBuffer(page: Page) {
+  // @ts-ignore
+  await page._client.send('Network.enable', {
+    maxResourceBufferSize: 1024 * 1204 * 100,
+    maxTotalBufferSize: 1024 * 1204 * 200,
+  });
 }

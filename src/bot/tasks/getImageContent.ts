@@ -19,7 +19,7 @@ export async function getImageContent(
 
   await page.goto(redditUrl, { waitUntil: 'networkidle2' });
 
-  logger.info('Getting image Content from', redditUrl);
+  logger.info('Getting image Content from', { redditUrl });
 
   try {
     // wait until image posts are loaded
