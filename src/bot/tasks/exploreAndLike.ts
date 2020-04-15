@@ -85,7 +85,7 @@ export async function exploreAndLike(
 }
 
 async function scroll(page: Page, yCoord: number) {
-  console.log('scrolling to', yCoord);
+  logger.info('Scrolling', { yCoord });
 
   await page.evaluate((yCoord) => {
     console.log(yCoord);
@@ -94,7 +94,7 @@ async function scroll(page: Page, yCoord: number) {
 }
 
 async function moveMouse(page: Page, to: { xCoord: number; yCoord: number }) {
-  console.log('moving mouse', to);
+  logger.info('Move mouse', { ...to });
   const mouse = page.mouse;
   await mouse.move(to.xCoord, to.yCoord, { steps: 10 });
 }
