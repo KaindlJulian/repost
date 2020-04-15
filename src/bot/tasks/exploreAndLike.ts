@@ -73,7 +73,8 @@ export async function exploreAndLike(
       likes++;
     }
 
-    const backButton = await page.waitForSelector('a[href="/explore/"]');
+    await page.waitFor(1000);
+    const backButton = await page.$('a[href="/explore/"]');
 
     if (backButton) {
       await backButton.tap();
