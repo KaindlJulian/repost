@@ -43,6 +43,11 @@ export async function loginInstagramAccount(
 
   await page.waitFor(4000);
 
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  });
+
   // check for login error
   const error = await page.$('#slfErrorAlert');
   if (error) {
