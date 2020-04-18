@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
 import pm2 from 'pm2';
 import path from 'path';
+import arg from 'arg';
 import { logger } from './logger';
+import { GlobalBotContext } from './pm2';
 import * as bots from '../bots';
+import { parseCredentials } from './utils';
 
 dotenv.config();
 
@@ -15,6 +18,9 @@ pm2.connect(true, (err) => {
   // start all the bots
   Object.values(bots).forEach((botGetter) => {
     const bot = botGetter();
+
+    addToContext(bot);
+
     pm2.start(
       {
         script: path.join(__dirname, '/bot/index.js'),
@@ -64,3 +70,34 @@ pm2.connect(true, (err) => {
     pm2.disconnect();
   }, 5000);
 });
+
+function addToContext(bot: { name: string; args: string }) {
+  const context = GlobalBotContext.getInstance();
+
+  const schedule = bot.args.substring(
+    bot.args.indexOf('"') + 1,
+    bot.args.lastIndexOf('"')
+  );
+
+  const args = arg(
+    {
+      '--subreddits': String,
+      '--schedule': String,
+      '--insta': String,
+      '--tags': String,
+      '--explore': Boolean,
+    },
+    { permissive: false, argv: bot.args.split(' ') }
+  );
+
+  const c = {
+    name: bot.name,
+    subredditNames: args['--subreddits']!.split(','),
+    schedule: schedule,
+    tags: args['--tags']?.split(',') || [],
+    igUsername: parseCredentials(args['--insta']!).username,
+    explore: args['--explore'] || false,
+  };
+
+  context.addBotContext(c);
+}

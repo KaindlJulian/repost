@@ -7,3 +7,4 @@ export * from './listBotNames';
 export * from './messages/createPost';
 export * from './messages/sendInstagramChats';
 export * from './messages/getInstagramChats';
+export * from './GlobalBotContext';

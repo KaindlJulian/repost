@@ -7,6 +7,7 @@ import {
   runAction,
   getInstagramChats,
   createPost,
+  GlobalBotContext,
 } from '../../pm2';
 import {
   BotOptions,
@@ -24,8 +25,29 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
    */
   fastify.get('/bot', getAllOptions, async (request, response) => {
     const names = await listBotNames();
-    response.send(names);
+    const context = GlobalBotContext.getInstance();
+
+    const igNames = await Promise.all(
+      names.map(async (n) => {
+        return { name: n, igUsername: await context.findInstagramName(n) };
+      })
+    );
+
+    response.send(igNames);
   });
+
+  /*
+   * Get bot options (context)
+   */
+  fastify.get(
+    '/bot/:name/options',
+    getOptsOptions,
+    async (request, response) => {
+      const context = GlobalBotContext.getInstance();
+      const options = await context.findContext(request.params.name);
+      response.send(options);
+    }
+  );
 
   /**
    * Create a new bot
@@ -148,23 +170,28 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
 const getAllOptions: RouteShorthandOptions = {
   schema: {
     tags: ['bot'],
-    description: 'Get all bot names that are currently running',
-    summary: 'Get all bot names',
+    description:
+      'Get all bot names and their ig username that are currently running',
+    summary: 'Get all bot names and instagram usernames',
     security: [
       {
         apiKey: [],
       },
     ],
-    response: {
-      200: {
-        description: 'Successful Response',
-        type: 'array',
-        items: {
-          type: 'string',
-        },
-        example: ['great', 'bot', 'names'],
+  },
+};
+
+const getOptsOptions: RouteShorthandOptions = {
+  schema: {
+    tags: ['bot'],
+    description:
+      'Get bot options (context). subreddits, schedule, igName, tags, explore',
+    summary: 'Get the bots options',
+    security: [
+      {
+        apiKey: [],
       },
-    },
+    ],
   },
 };
 
