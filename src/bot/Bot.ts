@@ -18,7 +18,6 @@ import {
   collectChats,
 } from './tasks';
 import { sendInstagramChats } from '../pm2';
-import arg from 'arg';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
