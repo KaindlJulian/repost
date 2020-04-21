@@ -25,7 +25,7 @@ const REDDIT_URL = 'https://www.reddit.com/r/';
 
 export class Bot {
   /**
-   * Where the account details are stored
+   * Where the ig account details are stored
    */
   private instagramCredentials: InstagramCredentials;
 
