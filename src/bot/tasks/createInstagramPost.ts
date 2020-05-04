@@ -69,5 +69,7 @@ export async function createInstagramPost(
     await shareButton.click();
   }
 
+  await browser.close();
+
   return true;
 }

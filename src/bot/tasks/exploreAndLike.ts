@@ -67,8 +67,11 @@ export async function exploreAndLike(
 
     // 5) Randomly like posts
     if (randomizer.evaluatePercentage(randomizer.float(0.05, 0.45))) {
-      const likeButton = await page.waitForSelector('svg[aria-label="Like"]');
-      await likeButton.tap();
+      page.waitFor(1000);
+      const likeButton = await page.$('svg[aria-label="Like"]');
+      if (likeButton) {
+        await likeButton.tap();
+      }
       logger.info('Liked a post!', page.url);
       likes++;
     }
@@ -80,6 +83,8 @@ export async function exploreAndLike(
       await backButton.tap();
     }
   }
+
+  await browser.close();
 
   return true;
 }
