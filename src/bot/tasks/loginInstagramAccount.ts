@@ -41,7 +41,6 @@ export async function loginInstagramAccount(
   await page.waitFor(2000);
   await page.click('[type=submit');
 
-  await page.waitFor(2000);
   await page.waitForNavigation({ waitUntil: 'networkidle2' });
 
   await page.screenshot({
