@@ -17,7 +17,7 @@ export async function getImageContent(
 
   await page.browserContext().overridePermissions(redditUrl, []);
 
-  await page.goto(redditUrl, { waitUntil: 'networkidle2' });
+  await page.goto(redditUrl, { waitUntil: 'networkidle2', timeout: 0 });
 
   logger.info('Getting image Content from', { redditUrl });
 

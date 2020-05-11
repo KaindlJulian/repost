@@ -18,7 +18,7 @@ export async function getVideoContent(
 
   await page.browserContext().overridePermissions(redditUrl, []);
 
-  await page.goto(redditUrl, { waitUntil: 'networkidle2' });
+  await page.goto(redditUrl, { waitUntil: 'networkidle2', timeout: 0 });
   await page.waitFor(3000);
 
   // check if subreddit exists

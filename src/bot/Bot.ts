@@ -197,6 +197,10 @@ export class Bot {
     }
 
     if (!content) {
+      content = await getVideoContent(subreddit.url);
+    }
+
+    if (!content) {
       logger.info('No content found, skipping the schedule.', {
         subreddit: subreddit.url,
       });

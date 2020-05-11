@@ -23,7 +23,10 @@ export async function collectChats(
     return [];
   }
 
-  await page.goto(URLS.INSTAGRAM_CHATS, { waitUntil: 'networkidle2' });
+  await page.goto(URLS.INSTAGRAM_CHATS, {
+    waitUntil: 'networkidle2',
+    timeout: 0,
+  });
 
   logger.info('Collecting chats', { account: credentials.username });
 

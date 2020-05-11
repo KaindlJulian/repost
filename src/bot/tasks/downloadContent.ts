@@ -55,7 +55,10 @@ async function handleFile(
     return undefined;
   }
 
-  const source = await page.goto(content.url, { waitUntil: 'networkidle2' });
+  const source = await page.goto(content.url, {
+    waitUntil: 'networkidle2',
+    timeout: 0,
+  });
 
   if (!source) {
     logger.warn('No file found on', content.url);
@@ -88,7 +91,7 @@ async function handleFile(
  * Converts video content to gif content
  */
 async function convertVideo(page: Page, content: Content): Promise<Content> {
-  await page.goto(URLS.VIDEO_TO_GIF, { waitUntil: 'networkidle2' });
+  await page.goto(URLS.VIDEO_TO_GIF, { waitUntil: 'networkidle2', timeout: 0 });
 
   logger.info('Converting video to gif', content);
 

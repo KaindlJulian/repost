@@ -37,7 +37,10 @@ export async function exploreAndLike(
   logger.info('Exploring and liking posts', { amount: maxLikes });
 
   // 1) Go to explore page
-  await page.goto(URLS.INSTAGRAM_EXPLORE, { waitUntil: 'networkidle2' });
+  await page.goto(URLS.INSTAGRAM_EXPLORE, {
+    waitUntil: 'networkidle2',
+    timeout: 0,
+  });
   await page.emulate(GALAXY_S5);
 
   for (let likes = 0; likes < maxLikes; ) {

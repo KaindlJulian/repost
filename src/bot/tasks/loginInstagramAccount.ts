@@ -27,7 +27,10 @@ export async function loginInstagramAccount(
     return;
   }
 
-  await page.goto(URLS.INSTAGRAM_LOGIN, { waitUntil: 'networkidle2' });
+  await page.goto(URLS.INSTAGRAM_LOGIN, {
+    waitUntil: 'networkidle2',
+    timeout: 0,
+  });
 
   if (await isValidSession(page)) {
     return page;
@@ -41,7 +44,7 @@ export async function loginInstagramAccount(
   await page.waitFor(2000);
   await page.click('[type=submit');
 
-  await page.waitForNavigation({ waitUntil: 'networkidle2' });
+  await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 0 });
 
   await page.screenshot({
     type: 'png',
