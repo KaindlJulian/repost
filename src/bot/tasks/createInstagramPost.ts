@@ -61,8 +61,6 @@ export async function createInstagramPost(
 
   const shareButton = (await page.$x("//button[contains(text(), 'Share')]"))[0];
 
-  logger.info('Found share button', { shareButton });
-
   // only actually post when running prod
   if (process.env.NODE_ENV === 'production') {
     await shareButton.click();
@@ -75,7 +73,7 @@ export async function createInstagramPost(
     logger.info('Created new Post!', { content });
   }
 
-  await page.waitFor(500);
+  await page.waitFor(30_000);
   await browser.close();
 
   return true;
