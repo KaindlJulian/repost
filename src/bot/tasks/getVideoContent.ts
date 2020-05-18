@@ -1,6 +1,6 @@
 import { launch, Page } from 'puppeteer';
 import { Content, ContentType } from '../../types';
-import { LAUNCH_OPTIONS } from './task.config';
+import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 
@@ -18,7 +18,10 @@ export async function getVideoContent(
 
   await page.browserContext().overridePermissions(redditUrl, []);
 
-  await page.goto(redditUrl, { waitUntil: 'networkidle2', timeout: 0 });
+  await page.goto(redditUrl, {
+    waitUntil: 'networkidle2',
+    timeout: NAV_TIMEOUT,
+  });
   await page.waitFor(3000);
 
   // check if subreddit exists

@@ -2,7 +2,7 @@ import { launch } from 'puppeteer';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { Content, ContentType } from '../../types';
-import { LAUNCH_OPTIONS } from './task.config';
+import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
 
 /**
  * Tries to get image and text from a subreddit
@@ -17,7 +17,10 @@ export async function getImageContent(
 
   await page.browserContext().overridePermissions(redditUrl, []);
 
-  await page.goto(redditUrl, { waitUntil: 'networkidle2', timeout: 0 });
+  await page.goto(redditUrl, {
+    waitUntil: 'networkidle2',
+    timeout: NAV_TIMEOUT,
+  });
 
   logger.info('Getting image Content from', { redditUrl });
 

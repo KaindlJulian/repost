@@ -44,6 +44,12 @@ export async function createInstagramPost(
   await fileChooser.accept([content.filePath]);
   await page.waitFor(2000);
 
+  //SCREEN
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  });
+
   const fitImgButton = (await page.$x("//span[contains(text(), 'Expand')]"))[0];
   await fitImgButton.click();
 

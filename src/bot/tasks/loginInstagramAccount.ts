@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer';
 import { InstagramCredentials } from '../../types';
 import { logger } from '../../logger';
-import { URLS } from './task.config';
+import { URLS, NAV_TIMEOUT } from './task.config';
 
 /**
  * Tries to login to instagram with given credentials
@@ -44,11 +44,9 @@ export async function loginInstagramAccount(
   await page.waitFor(2000);
   await page.click('[type=submit');
 
-  await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 0 });
-
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  await page.waitForNavigation({
+    waitUntil: 'networkidle2',
+    timeout: NAV_TIMEOUT,
   });
 
   // check for login error
@@ -69,6 +67,9 @@ export async function loginInstagramAccount(
 async function isValidSession(page: Page) {
   const cookies = await page.cookies();
   const sessionIdCookies = cookies.filter((c) => c.name === 'sessionid');
-  logger.info('Instagram Session', { ...sessionIdCookies[0] });
-  return sessionIdCookies.length === 1 && sessionIdCookies[0].value !== '';
+  if (sessionIdCookies.length === 1 && sessionIdCookies[0].value !== '') {
+    logger.info('Instagram Session', { ...sessionIdCookies[0] });
+    return true;
+  }
+  return false;
 }

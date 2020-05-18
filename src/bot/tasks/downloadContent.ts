@@ -3,7 +3,12 @@ import { promises as fs } from 'fs';
 import { launch, Page } from 'puppeteer';
 import { logger } from '../../logger';
 import { Content, PostableContent, ContentType } from '../../types';
-import { FILE_DOWNLOAD_DIR, LAUNCH_OPTIONS, URLS } from './task.config';
+import {
+  FILE_DOWNLOAD_DIR,
+  LAUNCH_OPTIONS,
+  URLS,
+  NAV_TIMEOUT,
+} from './task.config';
 
 /**
  * Tries to download a file from a given url.
@@ -91,7 +96,10 @@ async function handleFile(
  * Converts video content to gif content
  */
 async function convertVideo(page: Page, content: Content): Promise<Content> {
-  await page.goto(URLS.VIDEO_TO_GIF, { waitUntil: 'networkidle2', timeout: 0 });
+  await page.goto(URLS.VIDEO_TO_GIF, {
+    waitUntil: 'networkidle2',
+    timeout: NAV_TIMEOUT,
+  });
 
   logger.info('Converting video to gif', content);
 

@@ -20,4 +20,6 @@ const URLS = {
   VIDEO_TO_GIF: 'https://ezgif.com/video-to-gif',
 };
 
-export { LAUNCH_OPTIONS, GALAXY_S5, FILE_DOWNLOAD_DIR, URLS };
+const NAV_TIMEOUT = 120 * 1000;
+
+export { LAUNCH_OPTIONS, GALAXY_S5, FILE_DOWNLOAD_DIR, URLS, NAV_TIMEOUT };
