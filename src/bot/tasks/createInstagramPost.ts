@@ -44,12 +44,6 @@ export async function createInstagramPost(
   await fileChooser.accept([content.filePath]);
   await page.waitFor(2000);
 
-  //SCREEN
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME}/.pm2/logs/memes.png`,
-  });
-
   const fitImgButton = (await page.$x("//span[contains(text(), 'Expand')]"))[0];
   await fitImgButton.click();
 
@@ -65,17 +59,23 @@ export async function createInstagramPost(
   await page.waitForSelector('textarea');
   await page.type('textarea', input);
 
+  //SCREEN
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  });
+
   const shareButton = (await page.$x("//button[contains(text(), 'Share')]"))[0];
 
-  if (!shareButton) {
-    return false;
-  }
+  logger.info('Found share button', { shareButton });
 
   // only actually post when running prod
   if (process.env.NODE_ENV === 'production') {
     await shareButton.click();
+    logger.info('Created new Post!', { content });
   }
 
+  await page.waitFor(500);
   await browser.close();
 
   return true;
