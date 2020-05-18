@@ -59,12 +59,6 @@ export async function createInstagramPost(
   await page.waitForSelector('textarea');
   await page.type('textarea', input);
 
-  //SCREEN
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME}/.pm2/logs/memes.png`,
-  });
-
   const shareButton = (await page.$x("//button[contains(text(), 'Share')]"))[0];
 
   logger.info('Found share button', { shareButton });
@@ -72,6 +66,12 @@ export async function createInstagramPost(
   // only actually post when running prod
   if (process.env.NODE_ENV === 'production') {
     await shareButton.click();
+    //SCREEN
+    await page.screenshot({
+      type: 'png',
+      path: `${process.env.HOME}/.pm2/logs/memes.png`,
+    });
+
     logger.info('Created new Post!', { content });
   }
 
