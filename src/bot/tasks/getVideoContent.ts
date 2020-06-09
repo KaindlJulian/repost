@@ -3,6 +3,7 @@ import { Content, ContentType } from '../../types';
 import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
+import { asyncFilter } from '../../utils/asyncFilter';
 
 /**
  * Tries to get a gif/video (in this order) and text from a subreddit.
@@ -27,6 +28,7 @@ export async function getVideoContent(
   // check if subreddit exists
   const cakeDay = await page.$('div[id*="CakeDay"]');
   if (!cakeDay) {
+    await browser.close();
     return undefined;
   }
 
@@ -36,7 +38,7 @@ export async function getVideoContent(
     // TODO: getGiphyVideos
   ];
 
-  browser.close();
+  await browser.close();
 
   if (!content) {
     return undefined;
@@ -51,13 +53,13 @@ export async function getVideoContent(
  */
 async function getRedditGifs(page: Page): Promise<Content[]> {
   logger.info('Getting reddit gifs');
-  const handles = await page.$$('source[src*="gif"]');
+  const handles = await page.$$('source[src*=".gif"]');
 
-  const filtered = handles.filter(async (handle) => {
+  const filtered = await asyncFilter(handles, async (handle) => {
     const data = await handle.evaluate((e) => {
       return e.getAttribute('src')!;
     });
-    !Cache.instance.has(data);
+    return !Cache.instance.has(data) && !data.includes('external');
   });
 
   const gifType = ContentType.Gif;
@@ -86,11 +88,11 @@ async function getImgurVideos(page: Page): Promise<Content[]> {
   logger.info('Getting imgur videos');
   const handles = await page.$$('a[href*="gifv"][class]');
 
-  const filtered = handles.filter(async (handle) => {
+  const filtered = await asyncFilter(handles, async (handle) => {
     const data = await handle.evaluate((e) => {
       return e.getAttribute('href')!;
     });
-    !Cache.instance.has(data);
+    return !Cache.instance.has(data);
   });
 
   return await Promise.all(

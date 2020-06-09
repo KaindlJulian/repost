@@ -64,6 +64,7 @@ export async function createInstagramPost(
   // only actually post when running prod
   if (process.env.NODE_ENV === 'production') {
     await shareButton.click();
+
     //SCREEN
     await page.screenshot({
       type: 'png',
