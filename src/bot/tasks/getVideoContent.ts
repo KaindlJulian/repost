@@ -48,7 +48,7 @@ export async function getVideoContent(
 }
 
 /**
- * Will fetch all the reddit gifs and convert them to content
+ * Fetches all the reddit gifs and convert them to content
  * Returned Content is filtered, not in the cache
  */
 async function getRedditGifs(page: Page): Promise<Content[]> {

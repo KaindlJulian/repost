@@ -33,7 +33,7 @@
     "node-cache": "^5.1.1",
     "node-fetch": "^2.6.0",
     "pm2": "^4.4.0",
-    "puppeteer": "^2.1.1",
+    "puppeteer": "^3.3.0",
     "random": "^2.2.0",
     "winston": "^3.2.1"
   },

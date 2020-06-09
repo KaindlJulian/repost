@@ -1,5 +1,4 @@
-import devices from 'puppeteer/DeviceDescriptors';
-import { LaunchOptions } from 'puppeteer';
+import { LaunchOptions, devices } from 'puppeteer';
 
 const GALAXY_S5 = devices['Galaxy S5'];
 

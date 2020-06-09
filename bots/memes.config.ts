@@ -1,4 +1,3 @@
-// this is a function because we cant access the execution context of the app otherwise and wont have access to the env vars
 export function memes() {
   return {
     name: 'memes',
