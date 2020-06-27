@@ -30,11 +30,13 @@ export async function getImageContent(
       visible: true,
       timeout: 3000,
     });
+
     await page.waitFor(1000);
   } catch (err) {
     logger.error(
       `${err}. The subreddit '${redditUrl}' might not exist or doesnt contain any image posts.`
     );
+    await browser.close();
     return undefined;
   }
 

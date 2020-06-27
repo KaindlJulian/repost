@@ -188,16 +188,17 @@ export class Bot {
    */
   private async tick() {
     const subreddit = this.subreddits.cycle();
-    let content = this.randomizer.evaluatePercentage(0.25)
+
+    const shouldPostVideo = this.randomizer.evaluatePercentage(0.25);
+
+    let content = shouldPostVideo
       ? await getVideoContent(subreddit.url)
       : await getImageContent(subreddit.url);
 
     if (!content) {
-      content = await getImageContent(subreddit.url);
-    }
-
-    if (!content) {
-      content = await getVideoContent(subreddit.url);
+      content = shouldPostVideo
+        ? await getImageContent(subreddit.url)
+        : await getVideoContent(subreddit.url);
     }
 
     if (!content) {
