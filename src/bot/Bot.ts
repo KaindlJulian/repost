@@ -13,7 +13,6 @@ import {
   createInstagramPost,
   getImageContent,
   downloadContent,
-  getVideoContent,
   exploreAndLike,
   collectChats,
 } from './tasks';
@@ -189,17 +188,9 @@ export class Bot {
   private async tick() {
     const subreddit = this.subreddits.cycle();
 
-    const shouldPostVideo = this.randomizer.evaluatePercentage(0.25);
+    // const shouldPostVideo = this.randomizer.evaluatePercentage(0.25);
 
-    let content = shouldPostVideo
-      ? await getVideoContent(subreddit.url)
-      : await getImageContent(subreddit.url);
-
-    if (!content) {
-      content = shouldPostVideo
-        ? await getImageContent(subreddit.url)
-        : await getVideoContent(subreddit.url);
-    }
+    const content = await getImageContent(subreddit.url);
 
     if (!content) {
       logger.info('No content found, skipping the schedule.', {

@@ -79,7 +79,12 @@ export async function getImageContent(
     return e.getAttribute('src')?.replace('preview', 'i').split('?')[0];
   });
 
-  const title = await page.evaluate(() => {
+  const postPage = await browser.newPage();
+  await postPage.goto(page.url());
+
+  await postPage.waitForSelector('h1');
+
+  const title = await postPage.evaluate(() => {
     return document.querySelectorAll('h1')[1].textContent;
   });
 
