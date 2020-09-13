@@ -31,7 +31,7 @@
     "fastify-cors": "^3.0.3",
     "fastify-swagger": "^2.6.0",
     "node-cache": "^5.1.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "pm2": "^4.4.0",
     "puppeteer": "^3.3.0",
     "random": "^2.2.0",
