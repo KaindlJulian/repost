@@ -56,6 +56,7 @@ export async function getImageContent(
   });
 
   if (!filteredPosts) {
+    logger.error('No posts after filtering');
     return undefined;
   }
 
@@ -67,8 +68,8 @@ export async function getImageContent(
   // get post content
   const url = await filteredPosts[0].evaluate((e) => {
     const externalUrl = (e.parentElement?.parentElement?.parentElement
-      ?.parentElement?.parentElement?.parentElement?.previousSibling
-      ?.firstChild as HTMLElement).getAttribute('href');
+      ?.parentElement?.parentElement?.parentElement?.parentElement
+      ?.previousSibling?.firstChild as HTMLElement)?.getAttribute('href');
 
     console.log(externalUrl);
 
@@ -95,6 +96,7 @@ export async function getImageContent(
       type: ContentType.Image,
       url: url,
       caption: title,
+      source: redditUrl.split('/r/')[1],
     };
   } else {
     return undefined;
