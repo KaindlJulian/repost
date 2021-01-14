@@ -26,7 +26,7 @@
     "cron": "^1.8.2",
     "cron-validator": "^1.1.1",
     "dotenv": "^8.2.0",
-    "fastify": "^2.14.1",
+    "fastify": "^2.15.1",
     "fastify-auth": "^0.7.2",
     "fastify-cors": "^3.0.3",
     "fastify-swagger": "^2.6.0",
