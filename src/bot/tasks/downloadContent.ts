@@ -126,6 +126,7 @@ async function convertVideo(page: Page, content: Content): Promise<Content> {
     type: ContentType.Gif,
     url: gifUrl,
     caption: content.caption,
+    source: content.source,
   };
 
   logger.info('Converted: ', content, convertedContent);

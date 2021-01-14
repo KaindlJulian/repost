@@ -8,6 +8,7 @@ export interface Content {
   type: ContentType;
   url: string;
   caption: string;
+  source?: string;
 }
 
 export interface PostableContent extends Content {

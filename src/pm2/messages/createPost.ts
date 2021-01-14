@@ -5,7 +5,12 @@ import { logger } from '../../logger';
 /**
  * Add subreddits to a given bot
  */
-export function createPost(name: string, caption?: string, url?: string) {
+export function createPost(
+  name: string,
+  caption?: string,
+  url?: string,
+  source?: string
+) {
   logger.info('Creating post from api', { caption, url });
 
   const urlFileExt = url?.split('.')[url?.split('.').length - 1].toLowerCase();
@@ -27,7 +32,10 @@ export function createPost(name: string, caption?: string, url?: string) {
 
   const message: CreatePostMessage = {
     type: MessageType.CreatePostMessage,
-    value: caption && url && type ? { caption, url, type } : undefined,
+    value:
+      caption && url && type && source
+        ? { caption, url, type, source }
+        : undefined,
   };
 
   sendMessageToProcess(name, message);

@@ -82,7 +82,12 @@ export const bot = (fastify: FastifyInstance, opts: any, done: Function) => {
    * Manually issue a post
    */
   fastify.post('/bot/:name/post', postOptions, (request, response) => {
-    createPost(request.params.name, request.body.caption, request.body.content);
+    createPost(
+      request.params.name,
+      request.body.caption,
+      request.body.content,
+      request.body.imgSource
+    );
     response.send();
   });
 
@@ -285,6 +290,12 @@ const postOptions: RouteShorthandOptions = {
           type: 'string',
           description: 'Direct link to image/gif or video content',
           example: 'https://i.imgur.com/QNnL1yk.mp4',
+        },
+        imgSource: {
+          type: 'string',
+          description:
+            'The bot will include the source as tag in the post description',
+          example: 'imgur',
         },
       },
     },

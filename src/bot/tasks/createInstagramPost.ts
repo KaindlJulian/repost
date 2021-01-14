@@ -54,8 +54,11 @@ export async function createInstagramPost(
 
   await page.waitFor(500);
 
-  // enter the post description with tags
-  const input = `${content.caption}\n\n${tags.map((t) => `#${t}`).join(' ')}`;
+  // enter the post description with tags (first tag is subreddit name)
+  const sourceTag = content.source ? `#${content.source} ` : '';
+  const input = `${content.caption}\n\n${sourceTag}${tags
+    .map((t) => `#${t}`)
+    .join(' ')}`;
   await page.waitForSelector('textarea');
   await page.type('textarea', input);
 
