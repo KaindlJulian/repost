@@ -27,10 +27,23 @@ export async function loginInstagramAccount(
     return;
   }
 
-  await page.goto(URLS.INSTAGRAM_LOGIN, {
-    waitUntil: 'networkidle2',
-    timeout: 0,
-  });
+  try {
+    await page.goto(URLS.INSTAGRAM_LOGIN, {
+      waitUntil: 'networkidle2',
+      timeout: 0,
+    });
+  } catch (err) {
+    //SCREEN
+    await page.screenshot({
+      type: 'png',
+      path: `${process.env.HOME}/.pm2/logs/memes.png`,
+    });
+    logger.info('Retrying to load instagram');
+    await page.goto(URLS.INSTAGRAM_LOGIN, {
+      waitUntil: 'networkidle2',
+      timeout: 0,
+    });
+  }
 
   if (await isValidSession(page)) {
     return page;
