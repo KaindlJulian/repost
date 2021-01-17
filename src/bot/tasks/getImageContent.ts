@@ -46,8 +46,11 @@ export async function getImageContent(
   // filter out ads and already used posts
   const filteredPosts = imagePosts.filter(async (handle) => {
     const data = await handle.evaluate((e) => {
+      const target = e.parentElement?.parentElement?.parentElement?.getAttribute(
+        'target'
+      );
       return {
-        target: e.getAttribute('target')!,
+        target: target,
         src: e.getAttribute('src')!,
       };
     });

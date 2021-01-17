@@ -33,23 +33,28 @@ export async function loginInstagramAccount(
       timeout: 0,
     });
   } catch (err) {
-    //SCREEN
-    await page.screenshot({
-      type: 'png',
-      path: `${process.env.HOME}/.pm2/logs/memes.png`,
-    });
     logger.info('Retrying to load instagram');
     await page.goto(URLS.INSTAGRAM_LOGIN, {
       waitUntil: 'networkidle2',
       timeout: 0,
     });
   }
+  //SCREEN
+  await page.screenshot({
+    type: 'png',
+    path: `${process.env.HOME}/.pm2/logs/memes.png`,
+  });
 
   if (await isValidSession(page)) {
     return page;
   }
 
-  await page.waitForSelector('[name=username]');
+  const acceptCookiesButton = (
+    await page.$x("//button[contains(text(), 'Accept')]")
+  )[0];
+  await acceptCookiesButton.click();
+
+  await page.waitFor(1000);
 
   // type in credentials and click submit
   await page.type('[name=username]', credentials.username, { delay: 50 });
