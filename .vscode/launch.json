@@ -139,6 +139,22 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Launch Login Creator Studio Tests",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "args": [
+        "--file",
+        "${workspaceFolder}/build/test/bot/tasks/loginCreatorStudio.test.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Launch Instagram Explore Test",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",

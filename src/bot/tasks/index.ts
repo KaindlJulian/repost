@@ -5,3 +5,4 @@ export * from './loginInstagramAccount';
 export * from './getVideoContent';
 export * from './exploreAndLike';
 export * from './collectChats';
+export * from './loginCreatorStudio'
