@@ -7,7 +7,7 @@ export const authenticate = (
   reply: FastifyReply<ServerResponse>,
   done: any
 ) => {
-  logger.info(process.env.NODE_ENV!);
+  logger.info("Env variables",{env: process.env.NODE_ENV});
   if (process.env.NODE_ENV === 'development') {
     logger.info('Skipping authentication', { NODE_ENV: process.env.NODE_ENV });
     done();

@@ -4,8 +4,9 @@
   "description": "Repost content from reddit to instagram",
   "scripts": {
     "build": "tsc -p .",
+    "set_env_win": "$env:NODE_ENV=\"development\"",
     "test": "ts-mocha -p tsconfig.json test/**/*.ts --exit",
-    "dev": "npm run build; NODE_ENV=development node build/src/app.js",
+    "dev": "npm run build; NODE_ENV=development node build\\src\\app.js",
     "start": "NODE_ENV=production node build/src/app.js",
     "deploy": "git push heroku master"
   },
@@ -33,7 +34,7 @@
     "node-cache": "^5.1.1",
     "node-fetch": "^2.6.1",
     "pm2": "^4.4.0",
-    "puppeteer": "^3.3.0",
+    "puppeteer": "^5.4.3",
     "random": "^2.2.0",
     "winston": "^3.2.1"
   },
@@ -42,7 +43,7 @@
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.11",
     "@types/node-fetch": "^2.5.7",
-    "@types/puppeteer": "^2.1.1",
+    "@types/puppeteer": "^5.4.3",
     "@types/random": "^2.1.1",
     "@types/winston": "^2.4.4",
     "mocha": "^7.2.0",

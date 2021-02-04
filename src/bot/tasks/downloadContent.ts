@@ -1,6 +1,5 @@
 import path from 'path';
 import { promises as fs } from 'fs';
-import { launch, Page } from 'puppeteer';
 import { logger } from '../../logger';
 import { Content, PostableContent, ContentType } from '../../types';
 import {
@@ -9,6 +8,8 @@ import {
   URLS,
   NAV_TIMEOUT,
 } from './task.config';
+import { launch } from 'puppeteer';
+import { Page } from 'puppeteer';
 
 /**
  * Tries to download a file from a given url.
@@ -25,7 +26,7 @@ export async function downloadContent(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
-  let downloadedContent = undefined;
+  let downloadedContent: PostableContent | undefined = undefined;
 
   logger.info('Trying to download content', { content });
 
@@ -118,7 +119,7 @@ async function convertVideo(page: Page, content: Content): Promise<Content> {
   // get converted gif direct link
   const gifUrl = await (
     await page.waitForSelector('img[alt="[video-to-gif output image]"]')
-  ).evaluate((element) => {
+  )!.evaluate((element: any) => {
     return `https:${element.getAttribute('src')}`;
   });
 
