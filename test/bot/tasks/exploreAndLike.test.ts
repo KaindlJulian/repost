@@ -7,7 +7,7 @@ import { Randomizer } from '../../../src/bot/Randomizer';
 
 dotenv.config();
 
-describe('createInstagramPost', function () {
+describe('exploreAndLike', function () {
   this.timeout(60 * TIMEOUT);
 
   it('should like some posts', async () => {

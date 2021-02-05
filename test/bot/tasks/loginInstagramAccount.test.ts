@@ -2,7 +2,6 @@ import assert from 'assert';
 import dotenv from 'dotenv';
 import { launch } from 'puppeteer';
 import { loginInstagramAccount } from '../../../src/bot/tasks';
-import { LAUNCH_OPTIONS } from '../../../src/bot/tasks/task.config';
 import { TIMEOUT } from './config.test';
 
 dotenv.config();

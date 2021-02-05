@@ -40,26 +40,25 @@ export async function loginInstagramAccount(
     });
   }
   //SCREEN
+  /*
   await page.screenshot({
     type: 'png',
     path: `${process.env.HOME}/.pm2/logs/memes.png`,
   });
-
+  */
   if (await isValidSession(page)) {
     return page;
   }
 
-  const acceptCookiesButton = (
-    await page.$x("//button[contains(text(), 'Accept')]")
-  )[0];
+  const acceptCookiesButton = (await page.$x("//button[@tabindex='0']"))[0];
   await acceptCookiesButton.click();
 
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
 
   // type in credentials and click submit
   await page.type('[name=username]', credentials.username, { delay: 50 });
   await page.type('[name=password', credentials.password, { delay: 50 });
-  await page.waitFor(2000);
+  await page.waitForTimeout(2000);
   await page.click('[type=submit');
 
   await page.waitForNavigation({
