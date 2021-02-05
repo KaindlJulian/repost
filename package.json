@@ -4,9 +4,8 @@
   "description": "Repost content from reddit to instagram",
   "scripts": {
     "build": "tsc -p .",
-    "set_env_win": "$env:NODE_ENV=\"development\"",
     "test": "ts-mocha -p tsconfig.json test/**/*.ts --exit",
-    "dev": "npm run build; NODE_ENV=development node build\\src\\app.js",
+    "dev": "node scripts/run-dev.js",
     "start": "NODE_ENV=production node build/src/app.js",
     "deploy": "git push heroku master"
   },
@@ -20,7 +19,7 @@
     "Julian Kaindl"
   ],
   "engines": {
-    "node": "12.13.0"
+    "node": ">=14.8.0"
   },
   "dependencies": {
     "arg": "^4.1.3",
