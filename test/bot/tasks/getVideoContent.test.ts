@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { Cache } from '../../../src/bot/Cache';
 import { getVideoContent } from '../../../src/bot/tasks';
+import { logger } from '../../../src/logger';
 import { TIMEOUT } from './config.test';
 
 describe('getVideoContent', function () {
@@ -24,8 +25,11 @@ describe('getVideoContent', function () {
     assert.strictEqual(result, undefined);
   });
 
-  it('should resolve to non-null data for existing subreddit', async () => {
-    const result = await getVideoContent('https://www.reddit.com/r/gifs');
+  it.only('should resolve to non-null data for existing subreddit', async () => {
+    const result = await getVideoContent(
+      'https://www.reddit.com/r/funnyvideos'
+    );
+    logger.info(result!);
     assert.notDeepStrictEqual(result, undefined);
   });
 });

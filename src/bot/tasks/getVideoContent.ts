@@ -4,6 +4,7 @@ import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { asyncFilter } from '../../utils/asyncFilter';
+import { writeFileSync } from 'fs';
 
 /**
  * Tries to get a gif/video (in this order) and text from a subreddit.
@@ -20,10 +21,10 @@ export async function getVideoContent(
   await page.browserContext().overridePermissions(redditUrl, []);
 
   await page.goto(redditUrl, {
-    waitUntil: 'networkidle2',
+    waitUntil: 'networkidle0',
     timeout: NAV_TIMEOUT,
   });
-  await page.waitFor(3000);
+  //await page.waitForTimeout(3000);
 
   // check if subreddit exists
   const cakeDay = await page.$('div[id*="CakeDay"]');
@@ -33,6 +34,7 @@ export async function getVideoContent(
   }
 
   const content = [
+    ...(await getRedditVideos(page)),
     ...(await getRedditGifs(page)),
     ...(await getImgurVideos(page)),
     // TODO: getGiphyVideos
@@ -45,6 +47,43 @@ export async function getVideoContent(
   }
 
   return content[0];
+}
+
+async function getRedditVideos(page: Page): Promise<Content[]> {
+  logger.info('Getting reddit videos');
+  const handles = await page.$x(
+    '//video/source[@type="application/vnd.apple.mpegURL"]'
+  );
+  const posts = await page.$$('div[class*="Post"]');
+
+  const filtered = await asyncFilter(handles, async (handle) => {
+    const data = await handle.evaluate((e) => {
+      return e.getAttribute('src')!;
+    });
+    return !Cache.instance.has(data) && !data.includes('external');
+  });
+
+  const videoType = ContentType.Video;
+
+  return await Promise.all(
+    filtered.map(async (handle, index) => {
+      return (await handle.evaluate(async (e) => {
+        const url = e.getAttribute('src')!;
+        let title = '';
+        if (index == 0) {
+          title = e.querySelectorAll('div[style*="posttitletextcolor"]')[index]
+            .childNodes[0].textContent!;
+        } else {
+          title = '';
+        }
+        return {
+          url: url.replace('preview', 'i').split('?')[0],
+          type: videoType,
+          caption: title,
+        };
+      })) as Content;
+    })
+  );
 }
 
 /**
