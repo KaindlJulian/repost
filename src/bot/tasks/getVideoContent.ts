@@ -51,37 +51,41 @@ export async function getVideoContent(
 
 async function getRedditVideos(page: Page): Promise<Content[]> {
   logger.info('Getting reddit videos');
-  const handles = await page.$x(
-    '//video/source[@type="application/vnd.apple.mpegURL"]'
-  );
   const posts = await page.$$('div[class*="Post"]');
 
-  const filtered = await asyncFilter(handles, async (handle) => {
-    const data = await handle.evaluate((e) => {
-      return e.getAttribute('src')!;
+  const filtered = await asyncFilter(posts, async (post) => {
+    const data = await post.evaluate((e) => {
+      return e.querySelector('source[type="application/vnd.apple.mpegURL"]')
+        ? e
+            .querySelector('source[type="application/vnd.apple.mpegURL"]')!
+            .getAttribute('src')!
+        : '';
     });
-    return !Cache.instance.has(data) && !data.includes('external');
+    const ad = await post.evaluate((e) =>
+      Array.from(e.getElementsByTagName('span')).some(
+        (item) => item.innerText === 'promoted'
+      )
+    );
+    console.log(ad);
+    return data !== '' && !Cache.instance.has(data) && !ad;
   });
 
   const videoType = ContentType.Video;
 
   return await Promise.all(
     filtered.map(async (handle, index) => {
-      return (await handle.evaluate(async (e) => {
-        const url = e.getAttribute('src')!;
-        let title = '';
-        if (index == 0) {
-          title = e.querySelectorAll('div[style*="posttitletextcolor"]')[index]
-            .childNodes[0].textContent!;
-        } else {
-          title = '';
-        }
+      return (await handle.evaluate(async (e, videoType) => {
+        (e as HTMLElement).click();
+        const url = e
+          .querySelector('source[type="application/vnd.apple.mpegURL"]')!
+          .getAttribute('src')!;
+        let title = document.querySelectorAll('h1')[1].innerText;
         return {
-          url: url.replace('preview', 'i').split('?')[0],
+          url: url.split('?')[0],
           type: videoType,
           caption: title,
         };
-      })) as Content;
+      }, videoType)) as Content;
     })
   );
 }
