@@ -56,8 +56,8 @@ export async function exploreAndLike(
     const mouseMoveAmount = randomizer.number(2, 6);
 
     for (let i = 0; i < mouseMoveAmount; i++) {
-      const xCoord = randomizer.number(16, page.viewport().width - 16);
-      const yCoord = randomizer.number(48, page.viewport().height - 48);
+      const xCoord = randomizer.number(16, page.viewport()!.width - 16);
+      const yCoord = randomizer.number(48, page.viewport()!.height - 48);
       await moveMouse(page, {
         xCoord,
         yCoord,

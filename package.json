@@ -4,7 +4,7 @@
   "description": "Repost content from reddit to instagram",
   "scripts": {
     "build": "tsc -p .",
-    "test": "ts-mocha -p tsconfig.json test/**/getVideoContent.test.ts --exit",
+    "test": "ts-mocha -p tsconfig.json test/**/downloadContent.test.ts --exit",
     "dev": "node scripts/run-dev.js",
     "start": "NODE_ENV=production node build/src/app.js",
     "deploy": "git push heroku master"
@@ -33,7 +33,7 @@
     "node-cache": "^5.1.1",
     "node-fetch": "^2.6.1",
     "pm2": "^4.4.0",
-    "puppeteer": "^5.4.3",
+    "puppeteer": "7.0.3",
     "random": "^2.2.0",
     "winston": "^3.2.1"
   },

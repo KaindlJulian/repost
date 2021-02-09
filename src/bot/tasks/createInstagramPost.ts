@@ -72,6 +72,5 @@ export async function createInstagramPost(
 
   await page.waitFor(30_000);
   await browser.close();
-
   return true;
 }

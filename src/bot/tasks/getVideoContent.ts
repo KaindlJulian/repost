@@ -4,7 +4,6 @@ import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { asyncFilter } from '../../utils/asyncFilter';
-import { writeFileSync } from 'fs';
 
 /**
  * Tries to get a gif/video (in this order) and text from a subreddit.
@@ -61,16 +60,15 @@ async function getRedditVideos(page: Page): Promise<Content[]> {
             .getAttribute('src')!
         : '';
     });
-    const ad = await post.evaluate((e) =>
+    const ad = await post.evaluate((e: any) =>
       Array.from(e.getElementsByTagName('span')).some(
-        (item) => item.innerText === 'promoted'
+        (item: any) => item.innerText === 'promoted'
       )
     );
-    console.log(ad);
     return data !== '' && !Cache.instance.has(data) && !ad;
   });
 
-  const videoType = ContentType.Video;
+  const videoType = ContentType.RedditVideo;
 
   return await Promise.all(
     filtered.map(async (handle, index) => {
@@ -140,13 +138,13 @@ async function getImgurVideos(page: Page): Promise<Content[]> {
 
   return await Promise.all(
     filtered.map(async (handle) => {
-      await page.waitFor(1000);
+      await page.waitForTimeout(1000);
       await page.goto(await handle.evaluate((e) => e.getAttribute('href')!));
-      await page.waitFor(1000);
+      await page.waitForTimeout(1000);
 
       return {
         url: page.url().replace('gifv', 'mp4'),
-        type: ContentType.Video,
+        type: ContentType.ImgurVideo,
         caption: await page.title(),
       } as Content;
     })

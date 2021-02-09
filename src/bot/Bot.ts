@@ -10,13 +10,14 @@ import {
   Content,
 } from '../types';
 import {
+  downloadContent,
   createInstagramPost,
   getImageContent,
-  downloadContent,
   exploreAndLike,
   collectChats,
 } from './tasks';
 import { sendInstagramChats } from '../pm2';
+import { cleanUpDownloadFolder } from '../utils';
 
 const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days
 const TIME_ZONE = process.env.TIME_ZONE || 'Europe/Vienna';
@@ -208,5 +209,7 @@ export class Bot {
         this.tags
       );
     }
+
+    await cleanUpDownloadFolder();
   }
 }

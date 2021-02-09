@@ -38,9 +38,17 @@ describe('downloadContent', function () {
 
   it('should return postable content for video type content', async () => {
     const postableContent = await downloadContent({
-      caption: 'Once a good boy always a good boy',
-      url: 'https://i.imgur.com/dFHcCl6.mp4',
-      type: ContentType.Video,
+      caption: 'I compiled all my footage of Sylvester being clingy.',
+      url: 'https://i.imgur.com/DiHohd8.mp4',
+      type: ContentType.ImgurVideo,
+    });
+    assert.notDeepStrictEqual(postableContent, undefined);
+  });
+  it('should return postable content for video type content', async () => {
+    const postableContent = await downloadContent({
+      caption: 'Jokes with mom...',
+      url: 'https://v.redd.it/3r9m8c1yweg61/HLSPlaylist.m3u8',
+      type: ContentType.RedditVideo,
     });
     assert.notDeepStrictEqual(postableContent, undefined);
   });

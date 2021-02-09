@@ -1,10 +1,13 @@
-
-import {devices, LaunchOptions} from "puppeteer";
-
+import {
+  BrowserOptions,
+  ChromeArgOptions,
+  devices,
+  LaunchOptions,
+} from 'puppeteer';
 
 const GALAXY_S5 = devices['Galaxy S5'];
 
-const LAUNCH_OPTIONS: LaunchOptions = {
+const LAUNCH_OPTIONS: LaunchOptions & ChromeArgOptions & BrowserOptions = {
   headless: process.env.NODE_ENV === 'production' ? true : false,
   args: process.env.NODE_ENV === 'production' ? ['--no-sandbox'] : undefined,
   slowMo: process.env.NODE_ENV === 'production' ? undefined : 100,
@@ -19,7 +22,7 @@ const URLS = {
   INSTAGRAM_LOGIN: 'https://www.instagram.com/accounts/login/',
   INSTAGRAM_CHATS: 'https://www.instagram.com/direct/inbox/',
   VIDEO_TO_GIF: 'https://ezgif.com/video-to-gif',
-  CREATOR_STUDIO: "https://business.facebook.com/creatorstudio"
+  CREATOR_STUDIO: 'https://business.facebook.com/creatorstudio',
 };
 
 const NAV_TIMEOUT = 120 * 1000;

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import dotenv from 'dotenv';
-import { createInstagramPost, downloadContent } from '../../../src/bot/tasks';
+import downloadContent, { createInstagramPost } from '../../../src/bot/tasks';
 import { InstagramCredentials, ContentType } from '../../../src/types';
 import { TIMEOUT } from './config.test';
 

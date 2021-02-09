@@ -21,7 +21,7 @@ export function createPost(
       type = ContentType.Image;
       break;
     case 'mp4':
-      type = ContentType.Video;
+      type = ContentType.ImgurVideo;
       break;
     case 'gif':
       type = ContentType.Gif;
