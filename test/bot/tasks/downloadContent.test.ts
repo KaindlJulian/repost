@@ -2,12 +2,14 @@ import assert from 'assert';
 import dotenv from 'dotenv';
 import { downloadContent } from '../../../src/bot/tasks';
 import { ContentType } from '../../../src/types';
+import { cleanUpDownloadFolder } from '../../../src/utils';
 import { TIMEOUT } from './config.test';
 
 dotenv.config();
 
 describe('downloadContent', function () {
   this.timeout(TIMEOUT);
+  this.beforeAll(async () => await cleanUpDownloadFolder());
 
   it('should return undefined for content with empty url', async () => {
     const postableContent = await downloadContent({
@@ -36,7 +38,7 @@ describe('downloadContent', function () {
     assert.notDeepStrictEqual(postableContent, undefined);
   });
 
-  it('should return postable content for video type content', async () => {
+  it('should return postable content for ImgurVideo type content', async () => {
     const postableContent = await downloadContent({
       caption: 'I compiled all my footage of Sylvester being clingy.',
       url: 'https://i.imgur.com/DiHohd8.mp4',
@@ -44,7 +46,7 @@ describe('downloadContent', function () {
     });
     assert.notDeepStrictEqual(postableContent, undefined);
   });
-  it('should return postable content for video type content', async () => {
+  it('should return postable content for RedditVideo type content', async () => {
     const postableContent = await downloadContent({
       caption: 'Jokes with mom...',
       url: 'https://v.redd.it/3r9m8c1yweg61/HLSPlaylist.m3u8',

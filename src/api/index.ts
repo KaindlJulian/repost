@@ -16,7 +16,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const server = fastify({ logger: false });
 
 server.decorate('authenticate', authenticate);
-server.register(cors);
+server.register(cors as any);
 registerSwagger(server);
 
 server.get('/', {}, (request, response) => {

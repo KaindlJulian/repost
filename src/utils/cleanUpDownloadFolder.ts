@@ -3,7 +3,8 @@ import path from 'path';
 import { FILE_DOWNLOAD_DIR } from '../bot/tasks/task.config';
 
 export async function cleanUpDownloadFolder() {
-  const directory = path.resolve(__dirname, FILE_DOWNLOAD_DIR);
+  const directory = path.resolve(__dirname, '../../downloads');
+  console.log(directory);
   readdir(directory, (err, files) => {
     if (err) throw err;
 

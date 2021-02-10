@@ -3,14 +3,7 @@ import { createWriteStream, promises as fs } from 'fs';
 import fetch from 'node-fetch';
 import { logger } from '../../logger';
 import { Content, PostableContent, ContentType } from '../../types';
-import {
-  FILE_DOWNLOAD_DIR,
-  LAUNCH_OPTIONS,
-  URLS,
-  NAV_TIMEOUT,
-} from './task.config';
-import { launch } from 'puppeteer';
-import { Page } from 'puppeteer';
+import { FILE_DOWNLOAD_DIR } from './task.config';
 
 import util from 'util';
 const exec = util.promisify(require('child_process').exec);
@@ -28,24 +21,19 @@ export const downloadContent = async (
     return undefined;
   }
 
-  const browser = await launch(LAUNCH_OPTIONS);
-  const page = await browser.newPage();
-
   let downloadedContent: PostableContent | undefined = undefined;
 
   logger.info('Trying to download content', { content });
 
   switch (content.type) {
     case ContentType.Image:
-      downloadedContent = await handleFile(page, content);
+      downloadedContent = await handleFile(content);
       break;
     case ContentType.Gif:
-      await maxOutDevToolsResourceBuffer(page);
-      downloadedContent = await handleFile(page, content);
+      downloadedContent = await handleFile(content);
       break;
     case ContentType.ImgurVideo:
-      await maxOutDevToolsResourceBuffer(page);
-      downloadedContent = await handleFile(page, content);
+      downloadedContent = await handleFile(content);
       break;
 
     case ContentType.RedditVideo:
@@ -53,7 +41,6 @@ export const downloadContent = async (
       break;
   }
 
-  await browser.close();
   console.log(downloadedContent);
   return downloadedContent;
 };
@@ -63,19 +50,8 @@ export const downloadContent = async (
  * absolute path.
  */
 async function handleFile(
-  page: Page,
   content: Content
 ): Promise<PostableContent | undefined> {
-  const source = await page.goto(content.url, {
-    waitUntil: 'networkidle2',
-    timeout: 0,
-  });
-
-  if (!source) {
-    logger.warn('No file found on', content.url);
-    return undefined;
-  }
-
   try {
     await fs.access(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
   } catch (err) {
@@ -92,14 +68,12 @@ async function handleFile(
   );
 
   logger.info('Downloading file', content);
-  if (content.type === ContentType.ImgurVideo) {
-    const response = await fetch(content.url);
-    if (!response.ok)
-      throw new Error(`unexpected response ${response.statusText}`);
-    await streamPipeline(response.body, createWriteStream(file));
-  } else {
-    await fs.writeFile(file, await source.buffer());
+  const response = await fetch(content.url);
+  if (!response.ok) {
+    logger.warn('No file found on', content.url);
+    return undefined;
   }
+  await streamPipeline(response.body, createWriteStream(file));
 
   return { ...content, filePath: file };
 }
@@ -128,12 +102,4 @@ async function handleRedditVideo(
   await exec(ffmpegCommand);
 
   return { ...content, filePath };
-}
-
-async function maxOutDevToolsResourceBuffer(page: Page) {
-  // @ts-ignore
-  await page._client.send('Network.enable', {
-    maxResourceBufferSize: 1024 * 1204 * 100,
-    maxTotalBufferSize: 1024 * 1204 * 200,
-  });
 }
