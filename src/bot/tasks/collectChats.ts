@@ -16,7 +16,7 @@ export async function collectChats(
   await page.emulate(GALAXY_S5);
   await page.browserContext().overridePermissions(URLS.INSTAGRAM, []);
 
-  page = await loginInstagramAccount(page, credentials);
+  page = await loginInstagramAccount(credentials, page);
 
   if (!page) {
     logger.error('Login failed');

@@ -26,7 +26,7 @@ export async function exploreAndLike(
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
 
-  const success = await loginInstagramAccount(page, credentials);
+  const success = await loginInstagramAccount(credentials, page);
 
   if (!success) {
     return false;

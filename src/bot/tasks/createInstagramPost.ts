@@ -22,7 +22,7 @@ export async function createInstagramPost(
     .browserContext()
     .overridePermissions(URLS.INSTAGRAM, ['geolocation']);
 
-  page = await loginInstagramAccount(page, credentials);
+  page = await loginInstagramAccount(credentials, page);
 
   if (!page) {
     return false;

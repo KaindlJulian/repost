@@ -1,6 +1,5 @@
 import assert from 'assert';
 import dotenv from 'dotenv';
-import { launch } from 'puppeteer';
 import { loginInstagramAccount } from '../../../src/bot/tasks';
 import { TIMEOUT } from './config.test';
 
@@ -10,10 +9,7 @@ describe('loginInstagramAccount', function () {
   this.timeout(TIMEOUT);
 
   it('should resolve to false with login form invalid credentials', async () => {
-    const browser = await launch();
-    const page = await browser.newPage();
-
-    const success = await loginInstagramAccount(page, {
+    const success = await loginInstagramAccount({
       username: '',
       password: '',
     });
@@ -22,10 +18,7 @@ describe('loginInstagramAccount', function () {
   });
 
   it('should resolve to false with authentication invalid credentials', async () => {
-    const browser = await launch();
-    const page = await browser.newPage();
-
-    const success = await loginInstagramAccount(page, {
+    const success = await loginInstagramAccount({
       username: 'abc',
       password: '123456',
     });
@@ -34,10 +27,7 @@ describe('loginInstagramAccount', function () {
   });
 
   it('should login sucessfully with valid credentials', async () => {
-    const browser = await launch();
-    const page = await browser.newPage();
-
-    const success = await loginInstagramAccount(page, {
+    const success = await loginInstagramAccount({
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
     });

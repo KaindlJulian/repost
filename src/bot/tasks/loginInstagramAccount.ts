@@ -1,15 +1,16 @@
-import { Page } from 'puppeteer';
+import { launch, Page } from 'puppeteer';
 import { InstagramCredentials } from '../../types';
 import { logger } from '../../logger';
-import { URLS, NAV_TIMEOUT } from './task.config';
+import { URLS, NAV_TIMEOUT, LAUNCH_OPTIONS } from './task.config';
 
 /**
  * Tries to login to instagram with given credentials
- * @returns {Promise<boolean>} resolves to `true` if logged in succesfully
+ * @param Page Optionally provide the ig login page, if undefined the task creates a new page
+ * @returns {Promise<Page | undefined>} resolves to ig page or undefined. (returns undefined if the page closes for oauth)
  */
 export async function loginInstagramAccount(
-  page: Page,
-  credentials: InstagramCredentials
+  credentials: InstagramCredentials,
+  page?: Page
 ): Promise<Page | undefined> {
   logger.info('Logging into instagram account', {
     username: credentials.username,
@@ -27,50 +28,47 @@ export async function loginInstagramAccount(
     return;
   }
 
-  try {
-    await page.goto(URLS.INSTAGRAM_LOGIN, {
-      waitUntil: 'networkidle2',
-      timeout: 0,
-    });
-  } catch (err) {
-    logger.info('Retrying to load instagram');
-    await page.goto(URLS.INSTAGRAM_LOGIN, {
-      waitUntil: 'networkidle2',
-      timeout: 0,
-    });
-  }
-  //SCREEN
-  /*
-  await page.screenshot({
-    type: 'png',
-    path: `${process.env.HOME}/.pm2/logs/memes.png`,
-  });
-  */
-  if (await isValidSession(page)) {
-    return page;
+  let isOauth = false;
+  if (page) {
+    if (!page.url().includes(URLS.INSTAGRAM_LOGIN)) {
+      logger.error('Invoked "loginInstagramAccount" on wrong URL', page.url());
+      return undefined;
+    }
+    if (page.url().includes('redirect_uri')) {
+      isOauth = true;
+    }
+  } else {
+    const browser = await launch(LAUNCH_OPTIONS);
+    page = await browser.newPage();
+    page.goto(URLS.INSTAGRAM_LOGIN);
   }
 
-  const acceptCookiesButton = (await page.$x("//button[@tabindex='0']"))[0];
-  await acceptCookiesButton.click();
+  const cookieAcceptButton = await page.waitForXPath(
+    "//button[contains(text(), 'Accept')]"
+  );
+
+  if (cookieAcceptButton) {
+    cookieAcceptButton.click();
+  }
 
   await page.waitForTimeout(1000);
 
   // type in credentials and click submit
   await page.type('[name=username]', credentials.username, { delay: 50 });
   await page.type('[name=password', credentials.password, { delay: 50 });
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
   await page.click('[type=submit');
 
-  await page.waitForNavigation({
-    waitUntil: 'networkidle2',
-    timeout: NAV_TIMEOUT,
-  });
+  // check for oauth (the page will auto close after submit)
+  if (isOauth) {
+    return undefined;
+  }
 
   // check for login error
-  const error = await page.$('#slfErrorAlert');
-  if (error) {
+  const error = await page.waitForSelector('#slfErrorAlert');
+  if (error.asElement()) {
     logger.warn('Instagram login failed with', credentials);
-    return;
+    return undefined;
   }
 
   logger.info('Successfully logged in', { username: credentials.username });
