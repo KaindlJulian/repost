@@ -8,7 +8,10 @@ import {
 const GALAXY_S5 = devices['Galaxy S5'];
 
 const LAUNCH_OPTIONS: LaunchOptions & ChromeArgOptions & BrowserOptions = {
-  headless: process.env.NODE_ENV === 'production' ? true : false,
+  headless:
+    process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'CI'
+      ? true
+      : false,
   args: process.env.NODE_ENV === 'production' ? ['--no-sandbox'] : undefined,
   slowMo: process.env.NODE_ENV === 'production' ? undefined : 100,
   ignoreDefaultArgs: ['--disable-extensions'],
