@@ -25,7 +25,7 @@ describe('getVideoContent', function () {
     assert.strictEqual(result, undefined);
   });
 
-  it.only('should resolve to non-null data for existing subreddit', async () => {
+  it('should resolve to non-null data for existing subreddit', async () => {
     const result = await getVideoContent(
       'https://www.reddit.com/r/funnyvideos'
     );
