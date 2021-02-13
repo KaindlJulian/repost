@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install FFMPEG
-      - uses: sudo apt-get install ffmpeg
+      - run: sudo apt-get install ffmpeg
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
