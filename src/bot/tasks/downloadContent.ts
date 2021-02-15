@@ -6,7 +6,7 @@ import { Content, PostableContent, ContentType } from '../../types';
 import { FILE_DOWNLOAD_DIR } from './task.config';
 
 import util from 'util';
-const exec = util.promisify(require('child_process').exec);
+import { spawn } from 'child_process';
 const streamPipeline = util.promisify(require('stream').pipeline);
 
 /**
@@ -97,9 +97,30 @@ async function handleRedditVideo(
     FILE_DOWNLOAD_DIR,
     `${content.url.split('/')[3]}.mp4`
   );
-  const ffmpegCommand = `ffmpeg -protocol_whitelist file,http,https,tcp,tls -i ${content.url} -c copy ${filePath}`;
+  //const ffmpegCommand = `ffmpeg -protocol_whitelist file,http,https,tcp,tls -i ${content.url} -c copy ${filePath}`;
 
-  await exec(ffmpegCommand);
+  const child = spawn('ffmpeg', [
+    '-protocol_whitelist',
+    'file,http,https,tcp,tls',
+    '-i',
+    `${content.url}`,
+    '-c',
+    'copy',
+    `${filePath}`,
+  ]);
+  child.stdout.on('data', (data) => {
+    logger.info(`child stdout:\n${data}`);
+  });
 
+  child.stderr.on('data', (data) => {
+    logger.error(`child stderr:\n${data}`);
+  });
+  const exitCode: any = await new Promise((resolve, reject) => {
+    child.on('close', resolve);
+  });
+  console.log(exitCode);
+  if (exitCode) {
+    return undefined;
+  }
   return { ...content, filePath };
 }

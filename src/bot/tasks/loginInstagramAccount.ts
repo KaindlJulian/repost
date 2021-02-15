@@ -1,7 +1,7 @@
 import { launch, Page } from 'puppeteer';
 import { InstagramCredentials } from '../../types';
 import { logger } from '../../logger';
-import { URLS, NAV_TIMEOUT, LAUNCH_OPTIONS } from './task.config';
+import { URLS, LAUNCH_OPTIONS } from './task.config';
 
 /**
  * Tries to login to instagram with given credentials
@@ -43,9 +43,8 @@ export async function loginInstagramAccount(
     page.goto(URLS.INSTAGRAM_LOGIN);
   }
 
-  const cookieAcceptButton = await page.waitForXPath(
-    "//button[contains(text(), 'Accept')]"
-  );
+  await page.waitForXPath('//button[@tabindex = 0]');
+  const cookieAcceptButton = (await page.$x('//button[@tabindex = 0]'))[0];
 
   if (cookieAcceptButton) {
     cookieAcceptButton.click();
@@ -65,15 +64,19 @@ export async function loginInstagramAccount(
   }
 
   // check for login error
-  const error = await page.waitForSelector('#slfErrorAlert');
-  if (error.asElement()) {
-    logger.warn('Instagram login failed with', credentials);
-    return undefined;
+  try {
+    const error = await page.waitForSelector('#slfErrorAlert', {
+      timeout: 3000,
+    });
+    if (error.asElement()) {
+      logger.warn('Instagram login failed with', credentials);
+      return undefined;
+    }
+  } catch (err) {
+    logger.info('Successfully logged in', { username: credentials.username });
+
+    return page;
   }
-
-  logger.info('Successfully logged in', { username: credentials.username });
-
-  return page;
 }
 
 /**

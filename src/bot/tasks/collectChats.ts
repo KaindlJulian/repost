@@ -15,7 +15,10 @@ export async function collectChats(
 
   await page.emulate(GALAXY_S5);
   await page.browserContext().overridePermissions(URLS.INSTAGRAM, []);
-
+  await page.goto(URLS.INSTAGRAM_LOGIN, {
+    waitUntil: 'networkidle2',
+    timeout: 0,
+  });
   page = await loginInstagramAccount(credentials, page);
 
   if (!page) {

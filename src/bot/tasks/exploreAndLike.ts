@@ -25,7 +25,10 @@ export async function exploreAndLike(
 ): Promise<boolean> {
   const browser = await launch(LAUNCH_OPTIONS);
   const page = await browser.newPage();
-
+  await page.goto(URLS.INSTAGRAM_LOGIN, {
+    waitUntil: 'networkidle2',
+    timeout: 0,
+  });
   const success = await loginInstagramAccount(credentials, page);
 
   if (!success) {

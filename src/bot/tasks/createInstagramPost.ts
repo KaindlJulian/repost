@@ -28,7 +28,7 @@ export async function createInstagramPost(
     return false;
   }
 
-  await page.waitFor(1000);
+  await page.waitForTimeout(1000);
   await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`, {
     waitUntil: 'networkidle2',
     timeout: 0,
@@ -42,17 +42,17 @@ export async function createInstagramPost(
     page.click('div[data-testid="new-post-button"]'),
   ]);
   await fileChooser.accept([content.filePath]);
-  await page.waitFor(2000);
+  await page.waitForTimeout(2000);
 
   const fitImgButton = (await page.$x("//span[contains(text(), 'Expand')]"))[0];
   await fitImgButton.click();
 
-  await page.waitFor(500);
+  await page.waitForTimeout(500);
 
   const nextButton = (await page.$x("//button[contains(text(), 'Next')]"))[0];
   await nextButton.click();
 
-  await page.waitFor(500);
+  await page.waitForTimeout(500);
 
   // enter the post description with tags (first tag is subreddit name)
   const sourceTag = content.source ? `#${content.source} ` : '';
@@ -70,7 +70,7 @@ export async function createInstagramPost(
     logger.info('Created new Post!', { content });
   }
 
-  await page.waitFor(30_000);
+  await page.waitForTimeout(30_000);
   await browser.close();
   return true;
 }
