@@ -1,6 +1,10 @@
 import assert from 'assert';
 import dotenv from 'dotenv';
-import { downloadContent, createInstagramPost } from '../../../src/bot/tasks';
+import {
+  downloadContent,
+  createInstagramPost,
+  loginCreatorStudio,
+} from '../../../src/bot/tasks';
 import { InstagramCredentials, ContentType } from '../../../src/types';
 import { TIMEOUT } from './config.test';
 
@@ -15,6 +19,8 @@ describe('createInstagramPost', function () {
       password: process.env.IG_TEST_PASS!,
     };
 
+    const page = await loginCreatorStudio(creds);
+
     const postableContent = await downloadContent({
       caption: 'Look at my cute cat',
       url: 'https://i.redd.it/g2p43e3fqgk41.jpg',
@@ -23,7 +29,7 @@ describe('createInstagramPost', function () {
 
     const tags = ['cat', 'cute'];
 
-    const success = await createInstagramPost(creds, postableContent!, tags);
+    const success = await createInstagramPost(page!, postableContent!, tags);
 
     assert.strictEqual(success, true);
   });
