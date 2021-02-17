@@ -2,7 +2,7 @@ import { launch, Page } from 'puppeteer';
 import { logger } from '../../logger';
 import { InstagramCredentials } from '../../types';
 import { loginInstagramAccount } from './loginInstagramAccount';
-import { NAV_TIMEOUT, URLS, LAUNCH_OPTIONS } from './task.config';
+import { URLS, LAUNCH_OPTIONS } from './task.config';
 
 export async function loginCreatorStudio(
   credentials: InstagramCredentials

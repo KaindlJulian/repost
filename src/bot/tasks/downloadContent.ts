@@ -2,7 +2,12 @@ import path from 'path';
 import { createWriteStream, promises as fs } from 'fs';
 import fetch from 'node-fetch';
 import { logger } from '../../logger';
-import { Content, PostableContent, ContentType } from '../../types';
+import {
+  Content,
+  PostableContent,
+  ContentType,
+  PostableContentType,
+} from '../../types';
 import { FILE_DOWNLOAD_DIR } from './task.config';
 
 import util from 'util';
@@ -61,7 +66,7 @@ async function handleFile(
     await fs.mkdir(newDir);
   }
 
-  const file = path.resolve(
+  const filePath = path.resolve(
     __dirname,
     FILE_DOWNLOAD_DIR,
     content.url.split('/').pop()!
@@ -73,10 +78,17 @@ async function handleFile(
     logger.warn('No file found on', content.url);
     return undefined;
   }
-  await streamPipeline(response.body, createWriteStream(file));
+  await streamPipeline(response.body, createWriteStream(filePath));
 
-  return { ...content, filePath: file };
+  const { type, ...postcontent } = content;
+
+  return {
+    filePath,
+    type: PostableContentType.Video,
+    ...postcontent,
+  };
 }
+
 /**
  * Downloads a Video hosted on Reddit via FFMPEG and returns a PostableContent with filepath as absolute path
  */
@@ -97,7 +109,6 @@ async function handleRedditVideo(
     FILE_DOWNLOAD_DIR,
     `${content.url.split('/')[3]}.mp4`
   );
-  //const ffmpegCommand = `ffmpeg -protocol_whitelist file,http,https,tcp,tls -i ${content.url} -c copy ${filePath}`;
 
   const child = spawn('ffmpeg', [
     '-protocol_whitelist',
@@ -108,6 +119,7 @@ async function handleRedditVideo(
     'copy',
     `${filePath}`,
   ]);
+
   child.stdout.on('data', (data) => {
     logger.info(`child stdout:\n${data}`);
   });
@@ -115,12 +127,20 @@ async function handleRedditVideo(
   child.stderr.on('data', (data) => {
     logger.error(`child stderr:\n${data}`);
   });
+
   const exitCode: any = await new Promise((resolve, reject) => {
     child.on('close', resolve);
   });
-  console.log(exitCode);
+
   if (exitCode) {
     return undefined;
   }
-  return { ...content, filePath };
+
+  const { type, ...postcontent } = content;
+
+  return {
+    filePath,
+    type: PostableContentType.Video,
+    ...postcontent,
+  };
 }

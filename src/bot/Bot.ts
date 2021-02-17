@@ -15,6 +15,7 @@ import {
   getImageContent,
   exploreAndLike,
   collectChats,
+  loginCreatorStudio,
 } from './tasks';
 import { sendInstagramChats } from '../pm2';
 import { cleanUpDownloadFolder } from '../utils';
@@ -159,11 +160,10 @@ export class Bot {
     } else {
       const postableContent = await downloadContent(content);
       if (postableContent) {
-        await createInstagramPost(
-          this.instagramCredentials,
-          postableContent,
-          this.tags
-        );
+        const page = await loginCreatorStudio(this.instagramCredentials);
+        if (page) {
+          await createInstagramPost(page, postableContent, this.tags);
+        }
       }
     }
   }
@@ -203,11 +203,10 @@ export class Bot {
     const postableContent = await downloadContent(content);
 
     if (postableContent) {
-      await createInstagramPost(
-        this.instagramCredentials,
-        postableContent,
-        this.tags
-      );
+      const page = await loginCreatorStudio(this.instagramCredentials);
+      if (page) {
+        await createInstagramPost(page, postableContent, this.tags);
+      }
     }
 
     await cleanUpDownloadFolder();

@@ -5,6 +5,11 @@ export enum ContentType {
   RedditVideo,
 }
 
+export enum PostableContentType {
+  Image,
+  Video,
+}
+
 export interface Content {
   type: ContentType;
   url: string;
@@ -12,6 +17,7 @@ export interface Content {
   source?: string;
 }
 
-export interface PostableContent extends Content {
+export interface PostableContent extends Omit<Content, 'type'> {
+  type: PostableContentType;
   filePath: string;
 }

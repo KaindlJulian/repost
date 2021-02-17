@@ -77,6 +77,7 @@ export async function loginInstagramAccount(
 
     return page;
   }
+  return page;
 }
 
 /**

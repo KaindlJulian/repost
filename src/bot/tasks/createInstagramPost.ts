@@ -1,76 +1,77 @@
-import { launch, Page } from 'puppeteer';
-import { InstagramCredentials, PostableContent } from '../../types';
+import { Page } from 'puppeteer';
 import { logger } from '../../logger';
-import { loginInstagramAccount } from '.';
-import { GALAXY_S5, URLS, LAUNCH_OPTIONS } from './task.config';
+import { PostableContent, PostableContentType } from '../../types';
+import { getVideoLength } from '../../utils/getVideoLength';
 
 /**
- * Tries to create a new instagram post.
- * @returns {Promise<boolean>} resolves to `true` the post was created
+ * Creates a new instagram post using the creator studio
+ * @param page A logged in creator studio page
+ * @param content The content to post, can be any content type
  */
 export async function createInstagramPost(
-  credentials: InstagramCredentials,
+  page: Page,
   content: PostableContent,
   tags: string[]
-): Promise<boolean> {
-  logger.info('Creating post with', content);
-  const browser = await launch(LAUNCH_OPTIONS);
-  let page: Page | undefined = await browser.newPage();
+) {
+  const button = await page.waitForSelector('div[role="button"]');
+  await button.click();
 
-  await page.emulate(GALAXY_S5);
-  await page
-    .browserContext()
-    .overridePermissions(URLS.INSTAGRAM, ['geolocation']);
-
-  page = await loginInstagramAccount(credentials, page);
-
-  if (!page) {
-    return false;
+  // check for ig TV
+  if (content.type === PostableContentType.Video) {
+    const duration = await getVideoLength(content.filePath);
+    if (duration >= 60) {
+      await createInstagramTV(page, content);
+      return;
+    }
   }
 
-  await page.waitForTimeout(1000);
-  await page.goto(`${URLS.INSTAGRAM}/${credentials.username}`, {
-    waitUntil: 'networkidle2',
-    timeout: 0,
+  const menu = await page.waitForSelector('[role="menu"]');
+  await menu.evaluate((e) => {
+    (e.firstChild?.firstChild?.firstChild as HTMLElement).click();
   });
-
-  await page.waitForSelector('div[data-testid="new-post-button"]');
-
-  // upload the image
-  const [fileChooser] = await Promise.all([
-    page.waitForFileChooser(),
-    page.click('div[data-testid="new-post-button"]'),
-  ]);
-  await fileChooser.accept([content.filePath]);
-  await page.waitForTimeout(2000);
-
-  const fitImgButton = (await page.$x("//span[contains(text(), 'Expand')]"))[0];
-  await fitImgButton.click();
-
-  await page.waitForTimeout(500);
-
-  const nextButton = (await page.$x("//button[contains(text(), 'Next')]"))[0];
-  await nextButton.click();
-
-  await page.waitForTimeout(500);
 
   // enter the post description with tags (first tag is subreddit name)
   const sourceTag = content.source ? `#${content.source} ` : '';
   const input = `${content.caption}\n\n${sourceTag}${tags
     .map((t) => `#${t}`)
     .join(' ')}`;
-  await page.waitForSelector('textarea');
-  await page.type('textarea', input);
 
-  const shareButton = (await page.$x("//button[contains(text(), 'Share')]"))[0];
+  const textfield = await page.waitForSelector('[style*="user-select"]');
+  await textfield.type(input);
 
-  // only actually post when running prod
+  // enter location
+  const locationInput = await page.waitForSelector('input[autocomplete="off"]');
+  await locationInput.type(process.env.TIME_ZONE || 'Europe/Vienna');
+  await locationInput.press('Enter');
+
+  // upload content
+  const dropdown = await page.waitForSelector(
+    '[aria-haspopup="true"][aria-controls]'
+  );
+  await dropdown.click();
+  const upload = await page.waitForSelector('input[accept="video/*, image/*"]');
+  await upload.uploadFile(content.filePath);
+
+  await page.waitForXPath('//div[contains(text(), "100%")]', {
+    timeout: 60_000,
+  });
+
+  // publish
+  const publishButton = await page.waitForSelector(
+    '[style*="background-clip"]'
+  );
+
   if (process.env.NODE_ENV === 'production') {
-    await shareButton.click();
+    await publishButton.click();
     logger.info('Created new Post!', { content });
   }
 
-  await page.waitForTimeout(30_000);
-  await browser.close();
-  return true;
+  await page.browser().close();
+}
+
+/**
+ * @todo
+ */
+async function createInstagramTV(page: Page, content: PostableContent) {
+  await page.browser().close();
 }
