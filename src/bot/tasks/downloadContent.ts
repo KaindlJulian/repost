@@ -57,14 +57,7 @@ export const downloadContent = async (
 async function handleFile(
   content: Content
 ): Promise<PostableContent | undefined> {
-  try {
-    await fs.access(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
-  } catch (err) {
-    logger.error('Couldnt access download directory', err);
-    const newDir = path.resolve(__dirname, FILE_DOWNLOAD_DIR);
-    logger.info('Creating download directory', newDir);
-    await fs.mkdir(newDir);
-  }
+  await checkDownloadDir();
 
   const filePath = path.resolve(
     __dirname,
@@ -95,14 +88,7 @@ async function handleFile(
 async function handleRedditVideo(
   content: Content
 ): Promise<PostableContent | undefined> {
-  try {
-    await fs.access(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
-  } catch (err) {
-    logger.error('Couldnt access download directory', err);
-    const newDir = path.resolve(__dirname, FILE_DOWNLOAD_DIR);
-    logger.info('Creating download directory', newDir);
-    await fs.mkdir(newDir);
-  }
+  await checkDownloadDir();
 
   const filePath = path.resolve(
     __dirname,
@@ -143,4 +129,15 @@ async function handleRedditVideo(
     type: PostableContentType.Video,
     ...postcontent,
   };
+}
+
+async function checkDownloadDir() {
+  try {
+    await fs.access(path.resolve(__dirname, FILE_DOWNLOAD_DIR));
+  } catch (err) {
+    logger.error('Couldnt access download directory', err);
+    const newDir = path.resolve(__dirname, FILE_DOWNLOAD_DIR);
+    logger.info('Creating download directory', newDir);
+    await fs.mkdir(newDir);
+  }
 }
