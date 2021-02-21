@@ -60,6 +60,11 @@ export async function loginInstagramAccount(
 
   // check for oauth (the page will auto close after submit)
   if (isOauth) {
+    await page.waitForNavigation();
+    page.$$eval('button[type=button]', (el) => {
+      console.log(el);
+      (el[1] as HTMLButtonElement).click();
+    });
     return undefined;
   }
 
@@ -74,7 +79,7 @@ export async function loginInstagramAccount(
     }
   } catch (err) {
     logger.info('Successfully logged in', { username: credentials.username });
-
+    console.log('successfull login');
     return page;
   }
   return page;
