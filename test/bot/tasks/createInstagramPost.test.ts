@@ -9,6 +9,7 @@ import {
   InstagramCredentials,
   ContentType,
   PostableContentType,
+  PostableContent,
 } from '../../../src/types';
 import { TIMEOUT } from './config.test';
 
@@ -38,7 +39,7 @@ describe('createInstagramPost', function () {
     assert.strictEqual(success, true);
   });
 
-  it.only('should create a new video post (< 60s)', async () => {
+  it('should create a new video post (< 60s)', async () => {
     const creds: InstagramCredentials = {
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
@@ -59,7 +60,7 @@ describe('createInstagramPost', function () {
     assert.strictEqual(success, true);
   });
 
-  it('should create a new video post (TV, > 60s)', async () => {
+  it.only('should create a new video post (TV, > 60s)', async () => {
     const creds: InstagramCredentials = {
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
@@ -67,11 +68,13 @@ describe('createInstagramPost', function () {
 
     const page = await loginCreatorStudio(creds);
 
-    const postableContent = await downloadContent({
-      caption: 'He’s going to have a hell of a flight when he takes off',
-      url: 'https://v.redd.it/y4gcoz1mxei61/HLSPlaylist.m3u8',
-      type: ContentType.RedditVideo,
-    });
+    let postableContent: PostableContent = {
+      caption: 'yerp',
+      filePath: 'C:\\Users\\Julian\\Downloads\\tblmrsng.mp4',
+      type: PostableContentType.Video,
+      url: '',
+      source: 'my dl folder',
+    };
 
     const tags = ['bird', 'spin'];
 

@@ -24,7 +24,7 @@ export async function createInstagramPost(
   if (content.type === PostableContentType.Video) {
     const duration = await getVideoLength(content.filePath);
     if (duration >= 60) {
-      return await createInstagramTV(page, content);
+      return await createInstagramTV(page, content, tags);
     }
   }
 
@@ -38,12 +38,6 @@ export async function createInstagramPost(
     (e.firstChild?.firstChild?.firstChild as HTMLElement).click();
   });
 
-  // enter the post description with tags (first tag is subreddit name)
-  const sourceTag = content.source ? `#${content.source} ` : '';
-  const input = `${content.caption}\n\n${sourceTag}${tags
-    .map((t) => `#${t}`)
-    .join(' ')}`;
-
   const textfield = await page.waitForSelector('[style*="user-select"]');
   if (!textfield) {
     logger.error(
@@ -51,7 +45,7 @@ export async function createInstagramPost(
     );
     return false;
   }
-  await textfield.type(input);
+  await textfield.type(buildDescriptionString(content, tags));
 
   // enter location
   const locationInput = await page.waitForSelector('input[autocomplete="off"]');
@@ -89,6 +83,112 @@ export async function createInstagramPost(
   });
 
   // publish
+  const published = await clickPublish(page);
+  if (published) {
+    logger.info('Created new Post', content);
+  }
+
+  await page.browser().close();
+
+  return published;
+}
+
+async function createInstagramTV(
+  page: Page,
+  content: PostableContent,
+  tags: string[]
+): Promise<boolean> {
+  // click create ig TV option
+  const menu = await page.waitForSelector('[role="menu"]');
+  if (!menu) {
+    logger.error('Could not find menu with selector: [role="menu"]');
+    return false;
+  }
+  await menu.evaluate((e) => {
+    (e.firstChild?.nextElementSibling?.firstChild
+      ?.firstChild as HTMLElement).click();
+  });
+
+  // enter title
+  await page.waitForSelector('[style*="user-select"]');
+  const textfields = await page.$$('[style*="user-select"]');
+  if (!textfields[0]) {
+    logger.error(
+      'Could not find title textfield with selector: [style*="user-select"]'
+    );
+    return false;
+  }
+  await textfields[0].type(content.caption);
+
+  // enter descrition with tags
+  if (!textfields[1]) {
+    logger.error(
+      'Could not find description textfield with selector: [style*="user-select"]'
+    );
+    return false;
+  }
+  await textfields[1].type(buildDescriptionString(content, tags));
+
+  // upload video
+  const upload = await page.waitForSelector('input[accept="video/mp4"]');
+  if (!upload) {
+    logger.error(
+      'Could not find upload with selector: input[accept="video/mp4"]'
+    );
+    return false;
+  }
+  await upload.uploadFile(content.filePath);
+
+  await page.waitForXPath('//div[contains(text(), "100%")]', {
+    timeout: 60_000,
+  });
+
+  // post to feed
+  const feedCheckbox = await page.waitForSelector(
+    'button[role="checkbox"][data-hover]'
+  );
+  if (!feedCheckbox) {
+    logger.error(
+      'Could not find feedCheckbox with selector: button[role="checkbox"][data-hover]'
+    );
+    return false;
+  }
+  await feedCheckbox.click();
+
+  await page.waitForXPath('//div[contains(text(), "100%")]', {
+    timeout: 180_000, // 3mins
+  });
+
+  // publish
+  const published = await clickPublish(page);
+  if (published) {
+    logger.info('Created new Post', content);
+  }
+
+  await page.browser().close();
+
+  return published;
+}
+
+/**
+ * Builds descriptions string from caption source and tags
+ */
+function buildDescriptionString(
+  content: PostableContent,
+  tags: string[]
+): string {
+  // enter the post description with tags (first tag is subreddit name)
+  const sourceTag = content.source ? `#${content.source} ` : '';
+  return `${content.caption}\n\n${sourceTag}${tags
+    .map((t) => `#${t}`)
+    .join(' ')}`;
+}
+
+/**
+ * Wait for publish button selector and publish if running production
+ * @returns true if the image was published (or would have been if running not prod)
+ */
+async function clickPublish(page: Page): Promise<boolean> {
   const publishButton = await page.waitForSelector(
     '[style*="background-clip"]'
   );
@@ -101,31 +201,7 @@ export async function createInstagramPost(
       return false;
     }
     await publishButton.click();
-    logger.info('Created new Post!', { content });
   }
 
-  await page.browser().close();
-
-  return true;
-}
-
-/**
- * @todo
- */
-async function createInstagramTV(
-  page: Page,
-  content: PostableContent
-): Promise<boolean> {
-  // click create ig TV option
-  const menu = await page.waitForSelector('[role="menu"]');
-  if (!menu) {
-    logger.error('Could not find menu with selector: [role="menu"]');
-    return false;
-  }
-  await menu.evaluate((e) => {
-    (e.firstChild?.firstChild?.firstChild as HTMLElement).click();
-  });
-
-  await page.browser().close();
   return true;
 }
