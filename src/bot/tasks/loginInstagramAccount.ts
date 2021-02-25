@@ -1,4 +1,4 @@
-import { launch, Page } from 'puppeteer';
+import { launch, Page } from 'puppeteer-core';
 import { InstagramCredentials } from '../../types';
 import { logger } from '../../logger';
 import { URLS, LAUNCH_OPTIONS } from './task.config';
@@ -73,7 +73,7 @@ export async function loginInstagramAccount(
     const error = await page.waitForSelector('#slfErrorAlert', {
       timeout: 3000,
     });
-    if (error.asElement()) {
+    if (error && error.asElement()) {
       logger.warn('Instagram login failed with', credentials);
       return undefined;
     }

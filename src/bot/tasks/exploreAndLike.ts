@@ -1,4 +1,4 @@
-import { launch, Page } from 'puppeteer';
+import { launch, Page } from 'puppeteer-core';
 import { LAUNCH_OPTIONS, URLS, GALAXY_S5 } from './task.config';
 import { Randomizer } from '../Randomizer';
 import { InstagramCredentials } from '../../types';

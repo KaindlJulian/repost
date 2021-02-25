@@ -1,4 +1,4 @@
-import { launch } from 'puppeteer';
+import { launch } from 'puppeteer-core';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { Content, ContentType } from '../../types';

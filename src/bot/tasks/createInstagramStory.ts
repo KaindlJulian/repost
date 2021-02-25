@@ -1,4 +1,4 @@
-import { launch, Page } from 'puppeteer';
+import { launch, Page } from 'puppeteer-core';
 import { InstagramCredentials, PostableContent } from '../../types';
 import { logger } from '../../logger';
 import { loginInstagramAccount } from '.';

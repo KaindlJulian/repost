@@ -1,4 +1,4 @@
-import { launch, Page } from 'puppeteer';
+import { launch, Page } from 'puppeteer-core';
 import { Content, ContentType } from '../../types';
 import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
 import { Cache } from '../Cache';

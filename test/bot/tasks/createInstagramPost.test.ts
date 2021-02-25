@@ -17,7 +17,7 @@ dotenv.config();
 describe('createInstagramPost', function () {
   this.timeout(TIMEOUT);
 
-  /*it('should create a new image post', async () => {
+  it('should create a new image post', async () => {
     const creds: InstagramCredentials = {
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
@@ -36,9 +36,9 @@ describe('createInstagramPost', function () {
     const success = await createInstagramPost(page!, postableContent!, tags);
 
     assert.strictEqual(success, true);
-  });*/
+  });
 
-  it('should create a new video post (< 60s)', async () => {
+  it.only('should create a new video post (< 60s)', async () => {
     const creds: InstagramCredentials = {
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
@@ -59,7 +59,7 @@ describe('createInstagramPost', function () {
     assert.strictEqual(success, true);
   });
 
-  /*it('should create a new video post (TV, > 60s)', async () => {
+  it('should create a new video post (TV, > 60s)', async () => {
     const creds: InstagramCredentials = {
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
@@ -78,5 +78,5 @@ describe('createInstagramPost', function () {
     const success = await createInstagramPost(page!, postableContent!, tags);
 
     assert.strictEqual(success, true);
-  });*/
+  });
 });

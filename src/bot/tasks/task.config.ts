@@ -3,7 +3,7 @@ import {
   ChromeArgOptions,
   devices,
   LaunchOptions,
-} from 'puppeteer';
+} from 'puppeteer-core';
 
 const GALAXY_S5 = devices['Galaxy S5'];
 
@@ -15,10 +15,7 @@ const LAUNCH_OPTIONS: LaunchOptions & ChromeArgOptions & BrowserOptions = {
   args: process.env.NODE_ENV === 'production' ? ['--no-sandbox'] : undefined,
   slowMo: process.env.NODE_ENV === 'production' ? undefined : 100,
   ignoreDefaultArgs: ['--disable-extensions'],
-  executablePath:
-    process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'CI'
-      ? undefined
-      : 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  executablePath: require('chromium-all-codecs-bin')(),
 };
 
 const FILE_DOWNLOAD_DIR = '../../../downloads';
