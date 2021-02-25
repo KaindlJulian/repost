@@ -21,5 +21,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: sudo apt-get install ffmpeg
+      - run: sudo apt-get install chromium-codecs-ffmpeg-nonfree
       - run: npm install
       - run: npm run test:git

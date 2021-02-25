@@ -15,7 +15,10 @@ const LAUNCH_OPTIONS: LaunchOptions & ChromeArgOptions & BrowserOptions = {
   args: process.env.NODE_ENV === 'production' ? ['--no-sandbox'] : undefined,
   slowMo: process.env.NODE_ENV === 'production' ? undefined : 100,
   ignoreDefaultArgs: ['--disable-extensions'],
-  executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  executablePath:
+    process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'CI'
+      ? undefined
+      : 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
 };
 
 const FILE_DOWNLOAD_DIR = '../../../downloads';
