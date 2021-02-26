@@ -60,7 +60,7 @@ describe('createInstagramPost', function () {
     assert.strictEqual(success, true);
   });
 
-  it.only('should create a new video post (TV, > 60s)', async () => {
+  it('should create a new video post (TV, > 60s)', async () => {
     const creds: InstagramCredentials = {
       username: process.env.IG_TEST_USER!,
       password: process.env.IG_TEST_PASS!,
@@ -68,15 +68,13 @@ describe('createInstagramPost', function () {
 
     const page = await loginCreatorStudio(creds);
 
-    let postableContent: PostableContent = {
-      caption: 'yerp',
-      filePath: 'C:\\Users\\Julian\\Downloads\\tblmrsng.mp4',
-      type: PostableContentType.Video,
-      url: '',
-      source: 'my dl folder',
-    };
+    let postableContent = await downloadContent({
+      caption: 'No rules chess',
+      type: ContentType.RedditVideo,
+      url: 'https://v.redd.it/257pe1nhhsj61/HLSPlaylist.m3u8',
+    });
 
-    const tags = ['bird', 'spin'];
+    const tags = ['chess', 'no_rules'];
 
     const success = await createInstagramPost(page!, postableContent!, tags);
 
