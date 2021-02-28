@@ -16,6 +16,7 @@ import {
   exploreAndLike,
   collectChats,
   loginCreatorStudio,
+  getVideoContent,
 } from './tasks';
 import { sendInstagramChats } from '../pm2';
 import { cleanUpDownloadFolder } from '../utils';
@@ -188,15 +189,20 @@ export class Bot {
    */
   private async tick() {
     const subreddit = this.subreddits.cycle();
+    const shouldPostVideo = this.randomizer.evaluatePercentage(0.33);
 
-    // const shouldPostVideo = this.randomizer.evaluatePercentage(0.25);
+    const imageContent = await getImageContent(subreddit.url);
+    const videoContent = await getVideoContent(subreddit.url);
 
-    const content = await getImageContent(subreddit.url);
+    let content: Content | undefined;
+    if (shouldPostVideo) {
+      content = videoContent ? videoContent : imageContent;
+    } else {
+      content = imageContent ? imageContent : videoContent;
+    }
 
     if (!content) {
-      logger.info('No content found, skipping the schedule.', {
-        subreddit: subreddit.url,
-      });
+      logger.info('No content found, skipping schedule', subreddit);
       return;
     }
 
