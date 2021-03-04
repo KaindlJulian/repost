@@ -2,7 +2,7 @@ import { launch } from 'puppeteer-core';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { Content, ContentType } from '../../types';
-import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
+import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './browser.config';
 
 /**
  * Tries to get image and text from a subreddit
@@ -13,9 +13,13 @@ export async function getImageContent(
   if (redditUrl.length === 0) return undefined;
 
   const browser = await launch(LAUNCH_OPTIONS);
+  logger.info('1');
+
   const page = await browser.newPage();
+  logger.info('2');
 
   await page.browserContext().overridePermissions(redditUrl, []);
+  logger.info('3');
 
   await page.goto(redditUrl, {
     waitUntil: 'networkidle2',
@@ -89,7 +93,7 @@ export async function getImageContent(
   await postPage.waitForSelector('h1');
 
   const title = await postPage.evaluate(() => {
-    return document.querySelectorAll('h1')[1].textContent;
+    return document.querySelector('[style*="--posttitle"]')?.textContent;
   });
 
   await browser.close();

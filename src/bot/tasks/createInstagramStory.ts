@@ -2,7 +2,7 @@ import { launch, Page } from 'puppeteer-core';
 import { InstagramCredentials, PostableContent } from '../../types';
 import { logger } from '../../logger';
 import { loginInstagramAccount } from '.';
-import { GALAXY_S5, URLS, LAUNCH_OPTIONS } from './task.config';
+import { GALAXY_S5, URLS, LAUNCH_OPTIONS } from './browser.config';
 
 /**
  * @todo

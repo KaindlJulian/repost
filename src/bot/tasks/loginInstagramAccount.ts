@@ -1,7 +1,7 @@
 import { launch, Page } from 'puppeteer-core';
 import { InstagramCredentials } from '../../types';
 import { logger } from '../../logger';
-import { URLS, LAUNCH_OPTIONS } from './task.config';
+import { URLS, LAUNCH_OPTIONS } from './browser.config';
 
 /**
  * Tries to login to instagram with given credentials

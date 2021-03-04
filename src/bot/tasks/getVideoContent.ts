@@ -1,6 +1,6 @@
 import { launch, Page } from 'puppeteer-core';
 import { Content, ContentType } from '../../types';
-import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './task.config';
+import { LAUNCH_OPTIONS, NAV_TIMEOUT } from './browser.config';
 import { Cache } from '../Cache';
 import { logger } from '../../logger';
 import { asyncFilter } from '../../utils/asyncFilter';

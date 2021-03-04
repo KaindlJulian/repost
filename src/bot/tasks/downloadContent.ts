@@ -8,7 +8,7 @@ import {
   ContentType,
   PostableContentType,
 } from '../../types';
-import { FILE_DOWNLOAD_DIR } from './task.config';
+import { FILE_DOWNLOAD_DIR } from './browser.config';
 
 import util from 'util';
 import { spawn } from 'child_process';

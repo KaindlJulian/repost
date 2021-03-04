@@ -1,6 +1,6 @@
 import { launch, Page } from 'puppeteer-core';
 import { InstagramCredentials, InstagramChat } from '../../types';
-import { URLS, GALAXY_S5, LAUNCH_OPTIONS } from './task.config';
+import { URLS, GALAXY_S5, LAUNCH_OPTIONS } from './browser.config';
 import { loginInstagramAccount } from './loginInstagramAccount';
 import { logger } from '../../logger';
 

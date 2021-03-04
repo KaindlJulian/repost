@@ -1,6 +1,6 @@
 import { existsSync, fstat, readdir, unlink } from 'fs';
 import path from 'path';
-import { FILE_DOWNLOAD_DIR } from '../bot/tasks/task.config';
+import { FILE_DOWNLOAD_DIR } from '../bot/tasks/browser.config';
 
 export async function cleanUpDownloadFolder() {
   const directory = path.resolve(__dirname, '../../downloads');
